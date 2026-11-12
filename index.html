@@ -66,8 +66,8 @@ input,textarea{font-family:inherit;}
 .card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;
   display:flex; flex-direction:column; transition:transform .25s, box-shadow .25s; border:1px solid var(--line);}
 .card:hover{transform:translateY(-5px); box-shadow:var(--shadow-lg);}
-.card .media{height:170px; background:linear-gradient(135deg,#ffe1c2,#ffc98a); display:flex; align-items:center; justify-content:center; overflow:hidden;}
-.card .media img,.card .media video{width:100%; height:100%; object-fit:cover;}
+.card .media{height:260px; background:linear-gradient(135deg,#ffe1c2,#ffc98a); display:flex; align-items:center; justify-content:center; overflow:hidden;}
+.card .media img,.card .media video{width:100%; height:100%; object-fit:contain;}
 .card .media .emoji{font-size:70px; filter:drop-shadow(0 6px 8px rgba(0,0,0,.2));}
 .card .body{padding:14px 16px 16px; display:flex; flex-direction:column; gap:8px; flex:1;}
 .card h3{font-size:19px; font-weight:900;}
