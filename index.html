@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>🍕 بيتزا صبرة — صبرة، تلمسان | توصيل 24 ساعة</title>
+<style>
+:root{
+  --red:#d7261e; --red-dark:#a71a14; --red-light:#ff5a4e;
+  --gold:#f5b301; --cream:#fdf6ec; --card:#ffffff;
+  --text:#2b2118; --muted:#8a7a6a; --line:#efe4d5;
+  --shadow:0 8px 24px rgba(80,45,20,.10);
+  --shadow-lg:0 18px 50px rgba(60,30,10,.22);
+  --radius:18px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --cream:#171310; --card:#241d18; --text:#f3e9dc; --muted:#a89885;
+    --line:#3a3027; --shadow:0 8px 24px rgba(0,0,0,.4); --shadow-lg:0 18px 50px rgba(0,0,0,.6);
+  }
+}
+*{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:-apple-system,"Segoe UI",Tahoma,"Noto Kufi Arabic","Noto Sans Arabic",Arial,sans-serif;
+  background:var(--cream); color:var(--text); min-height:100vh; padding-bottom:calc(96px + env(safe-area-inset-bottom));
+  line-height:1.7;
+}
+button{font-family:inherit; cursor:pointer; border:none;}
+input,textarea{font-family:inherit;}
+
+/* ===== الترويسة ===== */
+.hero{
+  background:linear-gradient(150deg,var(--red) 0%,var(--red-dark) 65%,#7d120d 100%);
+  color:#fff; text-align:center; padding:calc(30px + env(safe-area-inset-top)) 18px 34px;
+  border-radius:0 0 34px 34px; box-shadow:var(--shadow-lg); position:relative; overflow:hidden;
+}
+.hero::after{content:"🍕🍕🍕🍕🍕🍕🍕🍕"; position:absolute; inset-inline:0; bottom:-14px;
+  font-size:26px; opacity:.14; letter-spacing:22px; white-space:nowrap; overflow:hidden;}
+.hero h1{font-size:clamp(30px,8vw,46px); font-weight:900; text-shadow:0 3px 10px rgba(0,0,0,.3);}
+.hero .slogan{font-size:clamp(15px,4.2vw,19px); opacity:.95; margin-top:6px;}
+.badges{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:18px;}
+.badge{background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35);
+  backdrop-filter:blur(4px); padding:7px 14px; border-radius:999px; font-size:13.5px; font-weight:700;}
+.hero .wa-mini{margin-top:20px; display:inline-block; background:#25d366; color:#fff; font-weight:800;
+  padding:10px 22px; border-radius:999px; text-decoration:none; font-size:15px; box-shadow:0 6px 18px rgba(0,0,0,.25);}
+
+.wrap{max-width:980px; margin:0 auto; padding:0 14px;}
+
+/* ===== قسم المناسبات ===== */
+.events{background:linear-gradient(135deg,#fff8e7,#ffefc4); border:2px dashed var(--gold);
+  border-radius:var(--radius); margin:22px auto; padding:20px; text-align:center; box-shadow:var(--shadow);}
+@media (prefers-color-scheme: dark){.events{background:linear-gradient(135deg,#2a2114,#33260f);}}
+.events h2{font-size:clamp(19px,5vw,24px); color:var(--red-dark);}
+@media (prefers-color-scheme: dark){.events h2{color:#ffb84d;}}
+.events p{color:var(--muted); margin:6px 0 14px; font-size:15px;}
+.btn-gold{background:linear-gradient(135deg,#25d366,#128c7e); color:#fff; font-weight:800; font-size:16px;
+  padding:12px 26px; border-radius:999px; box-shadow:0 6px 16px rgba(18,140,126,.35); transition:transform .15s;}
+.btn-gold:active{transform:scale(.95);}
+
+/* ===== قائمة المنتجات ===== */
+.section-title{font-size:clamp(24px,6.5vw,32px); font-weight:900; text-align:center; margin:26px 0 4px;}
+.section-sub{text-align:center; color:var(--muted); font-size:14px; margin-bottom:16px;}
+.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; padding-bottom:10px;}
+@media (max-width:480px){.grid{grid-template-columns:1fr;}}
+.card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;
+  display:flex; flex-direction:column; transition:transform .25s, box-shadow .25s; border:1px solid var(--line);}
+.card:hover{transform:translateY(-5px); box-shadow:var(--shadow-lg);}
+.card .media{height:170px; background:linear-gradient(135deg,#ffe1c2,#ffc98a); display:flex; align-items:center; justify-content:center; overflow:hidden;}
+.card .media img,.card .media video{width:100%; height:100%; object-fit:cover;}
+.card .media .emoji{font-size:70px; filter:drop-shadow(0 6px 8px rgba(0,0,0,.2));}
+.card .body{padding:14px 16px 16px; display:flex; flex-direction:column; gap:8px; flex:1;}
+.card h3{font-size:19px; font-weight:900;}
+.card .ing{color:var(--muted); font-size:13.5px; flex:1;}
+.price-row{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+.price{background:linear-gradient(135deg,var(--red),var(--red-dark)); color:#fff; font-weight:900;
+  padding:4px 14px; border-radius:999px; font-size:15px; box-shadow:0 4px 10px rgba(215,38,30,.35);}
+.stars{color:var(--gold); font-size:15px; letter-spacing:1px; white-space:nowrap;}
+.stars .count{color:var(--muted); font-size:12.5px; font-weight:400;}
+.link-btn{background:none; color:var(--red); font-weight:700; font-size:13px; text-decoration:underline; padding:2px;}
+@media (prefers-color-scheme: dark){.link-btn{color:#ff7b72;}}
+.actions{display:flex; gap:8px; margin-top:4px;}
+.qty{display:flex; align-items:center; gap:0; border:2px solid var(--line); border-radius:999px; overflow:hidden; flex:1;}
+.qty button{width:42px; height:42px; font-size:22px; font-weight:900; background:var(--cream); color:var(--red); transition:background .15s;}
+.qty button:active{background:#ffe0dd;}
+.qty .n{flex:1; text-align:center; font-weight:900; font-size:17px;}
+.btn-add{flex:1; background:linear-gradient(135deg,var(--red),var(--red-dark)); color:#fff; font-weight:900;
+  font-size:15px; border-radius:999px; padding:10px; box-shadow:0 6px 14px rgba(215,38,30,.35); transition:transform .12s;}
+.btn-add:active{transform:scale(.96);}
+.btn-rate{background:none; border:2px solid var(--gold); color:#b98700; border-radius:999px;
+  padding:8px 14px; font-weight:800; font-size:13px; white-space:nowrap; transition:transform .12s;}
+@media (prefers-color-scheme: dark){.btn-rate{color:var(--gold);}}
+.btn-rate:active{transform:scale(.95);}
+
+/* ===== شريط السلة ===== */
+.cartbar{position:fixed; bottom:0; inset-inline:0; z-index:50;
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:var(--card); border-top:1px solid var(--line); box-shadow:0 -8px 30px rgba(0,0,0,.12);}
+.cartbar .in{max-width:980px; margin:0 auto; display:flex; align-items:center; gap:12px;}
+.cart-info{flex:1; font-size:14px; color:var(--muted);}
+.cart-info b{color:var(--text); font-size:17px;}
+.btn-cart{background:linear-gradient(135deg,var(--red),var(--red-dark)); color:#fff; font-weight:900;
+  font-size:16px; padding:13px 22px; border-radius:999px; box-shadow:0 8px 20px rgba(215,38,30,.4);
+  transition:transform .12s, opacity .2s; white-space:nowrap;}
+.btn-cart:active{transform:scale(.96);}
+.btn-cart:disabled{opacity:.45; box-shadow:none; cursor:not-allowed;}
+.bump{animation:bump .35s;}
+@keyframes bump{40%{transform:scale(1.12);}}
+
+/* ===== النوافذ المنبثقة ===== */
+.overlay{position:fixed; inset:0; z-index:90; background:rgba(20,10,5,.55); backdrop-filter:blur(3px);
+  display:none; align-items:flex-end; justify-content:center;}
+@media (min-width:560px){.overlay{align-items:center;}}
+.overlay.open{display:flex;}
+.sheet{background:var(--card); width:100%; max-width:560px; max-height:88vh; overflow-y:auto;
+  border-radius:24px 24px 0 0; padding:20px 18px calc(24px + env(safe-area-inset-bottom));
+  box-shadow:var(--shadow-lg); animation:rise .3s ease;}
+@media (min-width:560px){.sheet{border-radius:24px; animation:pop .3s ease;}}
+@keyframes rise{from{transform:translateY(60px); opacity:0;}}
+@keyframes pop{from{transform:scale(.92); opacity:0;}}
+.sheet h3{font-size:20px; font-weight:900; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;}
+.x{background:var(--cream); width:34px; height:34px; border-radius:50%; font-size:17px; font-weight:900; color:var(--muted);}
+
+/* حقول النموذج */
+.field{margin-bottom:12px;}
+.field label{display:block; font-size:13.5px; font-weight:800; margin-bottom:4px; color:var(--muted);}
+.field input,.field textarea{width:100%; padding:12px 14px; border:2px solid var(--line); border-radius:14px;
+  background:var(--cream); color:var(--text); font-size:15.5px; outline:none; transition:border-color .2s;}
+.field input:focus,.field textarea:focus{border-color:var(--red);}
+.field input.err{border-color:var(--red); background:#ffeceb;}
+@media (prefers-color-scheme: dark){.field input.err{background:#3a1715;}}
+.err-msg{color:var(--red); font-size:12.5px; margin-top:4px; display:none; font-weight:700;}
+.err-msg.show{display:block;}
+
+/* عناصر السلة */
+.cart-item{display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px dashed var(--line);}
+.cart-item .nm{flex:1; font-weight:800; font-size:14.5px;}
+.cart-item .nm small{display:block; color:var(--muted); font-weight:400;}
+.mini-qty{display:flex; align-items:center; border:2px solid var(--line); border-radius:999px; overflow:hidden;}
+.mini-qty button{width:32px; height:32px; font-size:18px; font-weight:900; background:var(--cream); color:var(--red);}
+.mini-qty .n{width:30px; text-align:center; font-weight:900;}
+.del{background:none; font-size:19px; padding:6px; opacity:.7;}
+.total-row{display:flex; justify-content:space-between; font-size:18px; font-weight:900; margin:14px 0; padding-top:10px; border-top:2px solid var(--line);}
+.btn-send{width:100%; background:linear-gradient(135deg,#25d366,#128c7e); color:#fff; font-weight:900; font-size:17px;
+  padding:14px; border-radius:999px; box-shadow:0 8px 20px rgba(18,140,126,.4); transition:transform .12s, opacity .2s;}
+.btn-send:active{transform:scale(.97);}
+.btn-send:disabled{opacity:.45; box-shadow:none; cursor:not-allowed;}
+
+/* التقييمات */
+.review{padding:12px; border:1px solid var(--line); border-radius:14px; margin-bottom:10px; background:var(--cream);}
+.review .hd{display:flex; justify-content:space-between; font-size:13px; color:var(--muted);}
+.review .who{font-weight:800; color:var(--text);}
+.review p{font-size:14px; margin-top:4px;}
+.star-input{font-size:34px; display:flex; gap:6px; justify-content:center; margin:8px 0 14px; direction:ltr;}
+.star-input button{background:none; color:#cfc4b4; transition:transform .15s;}
+.star-input button.on{color:var(--gold); text-shadow:0 0 12px rgba(245,179,1,.6);}
+.star-input button:active{transform:scale(1.25);}
+
+/* لوحة التحكم */
+.admin-link{position:fixed; bottom:calc(90px + env(safe-area-inset-bottom)); inset-inline-start:12px; z-index:49;
+  background:none; color:var(--muted); font-size:12px; opacity:.55; text-decoration:underline;}
+.ap-item{border:1px solid var(--line); border-radius:14px; padding:12px; margin-bottom:12px; background:var(--cream);}
+.ap-item input,.ap-item textarea{width:100%; padding:9px 11px; border:2px solid var(--line); border-radius:10px;
+  background:var(--card); color:var(--text); font-size:14px; margin-bottom:6px; outline:none;}
+.ap-row{display:flex; gap:8px; flex-wrap:wrap;}
+.btn-sm{padding:8px 14px; border-radius:999px; font-weight:800; font-size:13px; transition:transform .12s, opacity .2s;}
+.btn-sm:active{transform:scale(.95);}
+.btn-save{background:linear-gradient(135deg,var(--red),var(--red-dark)); color:#fff;}
+.btn-del{background:#fff; border:2px solid var(--red); color:var(--red);}
+.btn-del.armed{background:var(--red); color:#fff;}
+.btn-grey{background:var(--line); color:var(--text);}
+.file-hint{font-size:11.5px; color:var(--muted);}
+
+/* التنبيهات */
+#toasts{position:fixed; top:calc(14px + env(safe-area-inset-top)); inset-inline:0; z-index:200;
+  display:flex; flex-direction:column; align-items:center; gap:8px; pointer-events:none;}
+.toast{background:#222; color:#fff; padding:11px 20px; border-radius:999px; font-size:14px; font-weight:700;
+  box-shadow:var(--shadow-lg); animation:toastIn .3s ease; max-width:88vw; text-align:center;}
+.toast.ok{background:#128c7e;} .toast.err{background:var(--red);} .toast.warn{background:#b98700;}
+.toast.out{animation:toastOut .4s ease forwards;}
+@keyframes toastIn{from{transform:translateY(-24px); opacity:0;}}
+@keyframes toastOut{to{transform:translateY(-24px); opacity:0;}}
+
+.empty{text-align:center; color:var(--muted); padding:34px 10px; font-size:15px;}
+footer{text-align:center; color:var(--muted); font-size:12.5px; padding:26px 0 6px;}
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<header class="hero">
+  <h1>🍕 بيتزا صبرة</h1>
+  <p class="slogan">طلبك عند الطلب، يصلك حتى باب بيتك 🏠</p>
+  <div class="badges">
+    <span class="badge">🕐 مفتوح 24 ساعة</span>
+    <span class="badge">📍 التوصيل في صبرة — تلمسان فقط</span>
+    <span class="badge">💬 الطلب عبر واتساب</span>
+  </div>
+  <a class="wa-mini" href="https://web.whatsapp.com/send?phone=213669957840" target="_blank" rel="noopener">💬 راسلنا على واتساب</a>
+</header>
+
+<div class="wrap">
+  <section class="events">
+    <h2>🎉 نحضّر للأعراس والحفلات وأعياد الميلاد</h2>
+    <p>بيتزا طازجة على الطلب بكميات كبيرة لمناسباتكم — احجز مسبقاً ونوصّلها ساخنة لباب الدار.</p>
+    <a class="btn-gold" style="display:inline-block; text-decoration:none;" href="https://web.whatsapp.com/send?phone=213669957840&text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A7%D9%84%D8%AD%D8%AC%D8%B2%20%D8%A8%D9%8A%D8%AA%D8%B2%D8%A7%20%D9%84%D8%A7%D8%B1%D9%83%D9%85" target="_blank" rel="noopener">📅 احجز عبر واتساب</a>
+  </section>
+
+  <h2 class="section-title">🍕 قائمتنا</h2>
+  <p class="section-sub">كل الطلبات تُحضَّر طازجة عند الطلب — التوصيل داخل صبرة (تلمسان)</p>
+  <div class="grid" id="products"></div>
+</div>
+
+<footer>بيتزا صبرة © 2026 — صبرة، ولاية تلمسان، الجزائر 🇩🇿<br>للطلب والاستفسار: 0669957840</footer>
+<button class="admin-link" id="adminLink" type="button">إدارة الموقع</button>
+
+<!-- شريط السلة -->
+<div class="cartbar">
+  <div class="in">
+    <div class="cart-info" id="cartInfo">السلة فارغة</div>
+    <button class="btn-cart" id="openCart" type="button">🛒 السلة وإرسال الطلب</button>
+  </div>
+</div>
+
+<!-- نافذة السلة وإتمام الطلب -->
+<div class="overlay" id="cartOverlay">
+  <div class="sheet">
+    <h3>🛒 سلة الطلب <button class="x" data-close="cartOverlay" type="button">✕</button></h3>
+    <div id="cartItems"></div>
+    <div class="total-row"><span>المجموع الكلي</span><span id="cartTotal" style="color:var(--red);">0 دج</span></div>
+    <div class="field"><label>الاسم (اختياري)</label><input id="fName" type="text" maxlength="50" placeholder="اسمك الكريم"></div>
+    <div class="field"><label>رقم الهاتف (إجباري)</label><input id="fPhone" type="tel" inputmode="tel" placeholder="06XXXXXXXX أو +2136XXXXXXXX" dir="ltr" style="text-align:right;">
+      <div class="err-msg" id="phoneErr">أدخل رقماً جزائرياً صحيحاً: 10 أرقام يبدأ بـ 05 أو 06 أو 07 (أو +213 بدون الصفر).</div>
+    </div>
+    <div class="field"><label>العنوان (اختياري)</label><input id="fAddr" type="text" maxlength="120" placeholder="حي، شارع، رقم..."></div>
+    <div class="field"><label>ملاحظة (اختياري)</label><textarea id="fNote" rows="2" maxlength="300" placeholder="مثال: بدون فلفل، توصيل سريع..."></textarea></div>
+    <button class="btn-send" id="btnSend" type="button">📲 أرسل الطلب عبر واتساب</button>
+  </div>
+</div>
+
+<!-- نافذة التقييمات -->
+<div class="overlay" id="revOverlay">
+  <div class="sheet">
+    <h3 id="revTitle">التقييمات <button class="x" data-close="revOverlay" type="button">✕</button></h3>
+    <div id="revList"></div>
+  </div>
+</div>
+
+<!-- نافذة إضافة تقييم -->
+<div class="overlay" id="rateOverlay">
+  <div class="sheet">
+    <h3 id="rateTitle">قيّم المنتج <button class="x" data-close="rateOverlay" type="button">✕</button></h3>
+    <div class="star-input" id="starInput"></div>
+    <div class="field"><label>اسمك (اختياري)</label><input id="rName" type="text" maxlength="40" placeholder="زبون كريم"></div>
+    <div class="field"><label>رأيك (اختياري)</label><textarea id="rText" rows="3" maxlength="400" placeholder="اكتب رأيك في المنتج..."></textarea></div>
+    <button class="btn-send" id="btnRate" type="button">⭐ نشر التقييم</button>
+  </div>
+</div>
+
+<!-- نافذة كلمة سر المالك -->
+<div class="overlay" id="pwdOverlay">
+  <div class="sheet">
+    <h3>🔐 منطقة المالك <button class="x" data-close="pwdOverlay" type="button">✕</button></h3>
+    <div class="field"><label>كلمة السر</label><input id="pwd" type="password" placeholder="••••••••">
+      <div class="err-msg" id="pwdErr">كلمة السر غير صحيحة.</div></div>
+    <button class="btn-send" id="btnPwd" type="button">دخول</button>
+  </div>
+</div>
+
+<!-- لوحة التحكم -->
+<div class="overlay" id="adminOverlay">
+  <div class="sheet">
+    <h3>⚙️ لوحة التحكم <button class="x" data-close="adminOverlay" type="button">✕</button></h3>
+    <h4 style="margin:6px 0 8px;">➕ إضافة منتج جديد</h4>
+    <div class="ap-item">
+      <input id="npName" type="text" placeholder="اسم المنتج">
+      <input id="npIng" type="text" placeholder="المكونات">
+      <input id="npPrice" type="number" min="0" step="50" placeholder="السعر (دج)">
+      <input id="npMedia" type="file" accept="image/*,video/*">
+      <div class="file-hint">صورة أو فيديو حتى 20 ميغابايت (اختياري)</div>
+      <button class="btn-sm btn-save" id="btnAddP" type="button">إضافة المنتج</button>
+    </div>
+    <h4 style="margin:14px 0 8px;">🍕 المنتجات</h4>
+    <div id="apProducts"></div>
+    <h4 style="margin:14px 0 8px;">⭐ التقييمات</h4>
+    <div id="apReviews"></div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+/* ============================================================
+   ⚙️ إعدادات المالك — عدّل هذا القسم فقط
+   ------------------------------------------------------------
+   لكي تُحفظ المنتجات والتقييمات في قاعدة بيانات مشتركة يراها
+   كل الزبائن مباشرة، أنشئ مشروعاً مجانياً على firebase.google.com
+   ثم فعّل Realtime Database (قواعد القراءة/الكتابة: true) وانسخ
+   بيانات التهيئة هنا. بدونها يعمل الموقع بوضع محلي مؤقت.
+============================================================ */
+const FIREBASE_CONFIG = {
+  apiKey: "PASTE_API_KEY_HERE",
+  authDomain: "PASTE_PROJECT.firebaseapp.com",
+  databaseURL: "PASTE_DATABASE_URL_HERE",
+  projectId: "PASTE_PROJECT_ID",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: ""
+};
+const WHATSAPP_INTL = "213669957840";
+const SHOP_NAME = "بيتزا صبرة";
+const ADMIN_PASSWORD = "محمد مزوار 2007";
+
+/* ================= الحالة العامة ================= */
+const state = {
+  products: [],          // {id,name,ingredients,price,media,mediaType}
+  reviews: {},           // {productId: [{id,stars,name,text,date}]}
+  cart: {},            // {productId: qty}
+  dbReady: false,
+  adminOpen: false,
+  dbFailed: false,
+  ratingPid: null,
+  ratingStars: 0,
+};
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = n => Number(n).toLocaleString("ar-DZ") + " دج";
+
+/* ================= فتح واتساب — بكل الطرق الممكنة ================= */
+function waUrls(intlNumber, text) {
+  const enc = encodeURIComponent(text || "");
+  return {
+    // للكمبيوتر: واتساب ويب مباشرة (يتجاوز api.whatsapp.com المحظور)
+    web: "https://web.whatsapp.com/send?phone=" + intlNumber + (enc ? "&text=" + enc : ""),
+    // للهاتف: wa.me يفتح التطبيق
+    app: "https://wa.me/" + intlNumber + (enc ? "?text=" + enc : "")
+  };
+}
+function openWhatsApp(url) {
+  // رابط احتياطي: إن كان الرابط الرئيسي web.whatsapp.com ولم ينجح نجرب wa.me
+  const alt = url.includes("web.whatsapp.com") ? url.replace("https://web.whatsapp.com/send?phone=", "https://wa.me/").replace("&text=", "?text=") : url;
+  let a = document.createElement("a");
+  a.href = url; a.target = "_blank"; a.rel = "noopener";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => {
+    a = document.createElement("a");
+    a.href = alt; a.target = "_blank"; a.rel = "noopener";
+    document.body.appendChild(a); a.click(); a.remove();
+  }, 1200);
+  setTimeout(() => showWaFallback(url), 2500);
+}
+let _waPanel = null;
+function showWaFallback(url) {
+  if (_waPanel) _waPanel.remove();
+  const d = document.createElement("div");
+  d.style.cssText = "position:fixed;inset-inline:0;bottom:110px;z-index:300;display:flex;justify-content:center;pointer-events:none;";
+  d.innerHTML = `<div style="pointer-events:auto;background:#128c7e;color:#fff;padding:12px 16px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35);max-width:92vw;text-align:center;font-size:14px;line-height:1.9;">
+    <div style="font-weight:900;">📲 إذا لم يُفتح واتساب تلقائياً:</div>
+    <a href="${url}" target="_blank" rel="noopener" style="color:#fff;font-weight:800;text-decoration:underline;word-break:break-all;">💻 واتساب ويب (كمبيوتر)</a>
+    <a href="${url.replace("https://web.whatsapp.com/send?phone=", "https://wa.me/").replace("&text=", "?text=")}" target="_blank" rel="noopener" style="color:#fff;font-weight:800;text-decoration:underline;word-break:break-all;display:block;">📱 واتساب تطبيق (هاتف)</a>
+    <div style="opacity:.85;font-size:12.5px;">أو انسخ الرابط: <button type="button" onclick="navigator.clipboard&&navigator.clipboard.writeText('${url}');this.textContent='✅ تم النسخ'" style="background:#fff;color:#128c7e;border:none;border-radius:999px;padding:3px 12px;font-weight:800;cursor:pointer;">نسخ الرابط</button></div>
+    <button type="button" onclick="this.parentElement.parentElement.remove()" style="margin-top:6px;background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:999px;padding:4px 16px;cursor:pointer;">إغلاق</button>
+  </div>`;
+  document.body.appendChild(d);
+  _waPanel = d;
+  setTimeout(() => { if (d.parentElement) d.remove(); }, 60000);
+}
+
+/* ================= التنبيهات (Toast) ================= */
+function toast(msg, type = "ok", ms = 3200) {
+  const t = document.createElement("div");
+  t.className = "toast " + type;
+  t.textContent = msg;
+  $("#toasts").appendChild(t);
+  setTimeout(() => { t.classList.add("out"); setTimeout(() => t.remove(), 420); }, ms);
+}
+
+/* ================= النوافذ المنبثقة ================= */
+function openOv(id) { $("#" + id).classList.add("open"); }
+function closeOv(id) { $("#" + id).classList.remove("open"); }
+document.querySelectorAll(".overlay").forEach(ov => {
+  ov.addEventListener("click", e => { if (e.target === ov) ov.classList.remove("open"); });
+});
+document.querySelectorAll("[data-close]").forEach(b =>
+  b.addEventListener("click", () => closeOv(b.dataset.close)));
+
+/* ================= قاعدة البيانات ================= */
+let db = null;
+const DEFAULTS = [
+  { id: "p1", name: "بيتزا ميني سبيسيال", ingredients: "صلصة طماطم وجبن", price: 500, media: null, mediaType: null },
+  { id: "p2", name: "بيتزا دجاج", ingredients: "كفتة دجاج وجبن وصلصة", price: 600, media: null, mediaType: null },
+];
+
+function initDB() {
+  // مؤقت أمان: إن تعذّر الوصول بعد 10 ثوانٍ نُعلن الفشل
+  const failTimer = setTimeout(() => {
+    if (!state.dbReady) {
+      state.dbFailed = true;
+      renderProducts();
+      toast("تعذر الوصول إلى المنتجات الآن، حاول تحديث الصفحة", "err", 6000);
+    }
+  }, 10000);
+
+  try {
+    if (typeof firebase === "undefined" || !FIREBASE_CONFIG.databaseURL || FIREBASE_CONFIG.databaseURL.includes("PASTE")) {
+      throw new Error("no-config");
+    }
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.database();
+
+    db.ref("products").on("value", snap => {
+      let v = snap.val();
+      if (!v) { v = Object.fromEntries(DEFAULTS.map(p => [p.id, p])); db.ref("products").set(v); }
+      state.products = Object.entries(v).map(([id, p]) => ({ id, ...p }));
+      state.dbReady = true; state.dbFailed = false; clearTimeout(failTimer);
+      renderProducts(); renderAdmin();
+    }, () => {
+      state.dbFailed = true; renderProducts();
+      toast("تعذر الوصول إلى المنتجات الآن، حاول تحديث الصفحة", "err", 6000);
+    });
+
+    db.ref("reviews").on("value", snap => {
+      const v = snap.val() || {};
+      state.reviews = v;
+      renderProducts(); renderAdmin();
+    });
+  } catch (e) {
+    // وضع محلي احتياطي — الحفظ في متصفحك يعمل بشكل كامل
+    lsLoad();
+    if (!state.products.length) state.products = [...DEFAULTS];
+    state.dbFailed = false;
+    clearTimeout(failTimer);
+    renderProducts();
+    toast("يعمل الموقع بوضع محلي — بياناتك محفوظة في هذا المتصفح ✅", "ok", 5000);
+  }
+}
+/* ----- وضع الحفظ المحلي (localStorage) عند غياب Firebase ----- */
+function lsLoad() {
+  try {
+    const p = JSON.parse(localStorage.getItem("ps_products") || "null");
+    const r = JSON.parse(localStorage.getItem("ps_reviews") || "null");
+    if (p) { state.products = Object.entries(p).map(([id, x]) => ({ id, ...x })); }
+    if (r) { state.reviews = r; }
+  } catch (e) {}
+}
+function lsSave() {
+  try {
+    const p = Object.fromEntries(state.products.map(x => [x.id, x]));
+    localStorage.setItem("ps_products", JSON.stringify(p));
+    localStorage.setItem("ps_reviews", JSON.stringify(state.reviews));
+  } catch (e) {
+    toast("مساحة التخزين ممتلئة — احذف بعض الصور القديمة أو استخدم صوراً أصغر", "err", 6000);
+  }
+}
+function saveProduct(id, data) {
+  if (db) return db.ref("products/" + id).set(data);
+  const i = state.products.findIndex(x => x.id === id);
+  if (i >= 0) state.products[i] = { id, ...data }; else state.products.push({ id, ...data });
+  lsSave(); renderProducts(); renderAdmin();
+}
+function removeProduct(id) {
+  if (db) { db.ref("products/" + id).remove(); db.ref("reviews/" + id).remove(); return; }
+  state.products = state.products.filter(x => x.id !== id);
+  delete state.reviews[id];
+  lsSave(); renderProducts(); renderAdmin();
+}
+function saveReview(pid, r) {
+  if (db) return db.ref("reviews/" + pid + "/" + r.id).set(r);
+  (state.reviews[pid] = state.reviews[pid] || {})[r.id] = r;
+  lsSave(); renderProducts(); renderAdmin();
+}
+function removeReview(pid, rid) {
+  if (db) return db.ref("reviews/" + pid + "/" + rid).remove();
+  if (state.reviews[pid]) { delete state.reviews[pid][rid]; if (!Object.keys(state.reviews[pid]).length) delete state.reviews[pid]; }
+  lsSave(); renderProducts(); renderAdmin();
+}
+
+/* ================= عرض المنتجات ================= */
+function avgStars(pid) {
+  const rs = state.reviews[pid] ? Object.values(state.reviews[pid]) : [];
+  if (!rs.length) return { avg: 0, count: 0 };
+  return { avg: rs.reduce((a, r) => a + r.stars, 0) / rs.length, count: rs.length };
+}
+function starStr(avg) {
+  const full = Math.round(avg);
+  return "★".repeat(full) + "☆".repeat(5 - full);
+}
+
+function renderProducts() {
+  const grid = $("#products");
+  if (!state.products.length) {
+    grid.innerHTML = state.dbFailed
+      ? `<div class="empty">تعذر الوصول إلى المنتجات الآن.<br>تحقق من اتصال الإنترنت ثم حدّث الصفحة.</div>`
+      : `<div class="empty">جارٍ تحميل القائمة...</div>`;
+    return;
+  }
+  grid.innerHTML = state.products.map(p => {
+    const { avg, count } = avgStars(p.id);
+    const qty = state.cart[p.id] || 0;
+    const media = p.media
+      ? (p.mediaType === "video"
+          ? `<video src="${p.media}" muted loop playsinline onmouseover="this.play()" onmouseout="this.pause()"></video>`
+          : `<img src="${p.media}" alt="${esc(p.name)}" loading="lazy">`)
+      : `<span class="emoji">🍕</span>`;
+    return `
+    <div class="card" data-pid="${p.id}">
+      <div class="media">${media}</div>
+      <div class="body">
+        <h3>${esc(p.name)}</h3>
+        <p class="ing">${esc(p.ingredients)}</p>
+        <div class="price-row">
+          <span class="price">${fmt(p.price)}</span>
+          <span class="stars">${count ? starStr(avg) + ` <span class="count">(${count})</span>` : `<span class="count">لا تقييمات بعد</span>`}</span>
+        </div>
+        <button class="link-btn" data-act="showrev" type="button">عرض التقييمات (${count})</button>
+        <div class="actions">
+          <div class="qty">
+            <button data-act="minus" type="button" aria-label="إنقاص">−</button>
+            <span class="n">${qty}</span>
+            <button data-act="plus" type="button" aria-label="زيادة">+</button>
+          </div>
+          <button class="btn-rate" data-act="rate" type="button">قيّم المنتج</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+  updateCartBar();
+}
+
+$("#products").addEventListener("click", e => {
+  const btn = e.target.closest("[data-act]");
+  if (!btn) return;
+  const card = e.target.closest(".card");
+  const pid = card.dataset.pid;
+  const act = btn.dataset.act;
+  if (act === "plus")  setQty(pid, (state.cart[pid] || 0) + 1);
+  if (act === "minus") setQty(pid, (state.cart[pid] || 0) - 1);
+  if (act === "rate")  openRate(pid);
+  if (act === "showrev") openReviews(pid);
+});
+
+function setQty(pid, q) {
+  if (q <= 0) delete state.cart[pid]; else state.cart[pid] = Math.min(q, 99);
+  renderProducts();
+}
+
+/* ================= السلة ================= */
+function cartCount() { return Object.values(state.cart).reduce((a, b) => a + b, 0); }
+function cartTotal() {
+  return Object.entries(state.cart).reduce((sum, [pid, q]) => {
+    const p = state.products.find(x => x.id === pid);
+    return sum + (p ? p.price * q : 0);
+  }, 0);
+}
+function updateCartBar() {
+  const n = cartCount();
+  $("#cartInfo").innerHTML = n
+    ? `<b>${n}</b> ${n === 1 ? "منتج" : "منتجات"} — المجموع: <b>${fmt(cartTotal())}</b>`
+    : "السلة فارغة";
+  const bar = $(".cartbar .in");
+  bar.classList.remove("bump"); void bar.offsetWidth; bar.classList.add("bump");
+}
+
+$("#openCart").addEventListener("click", () => {
+  renderCart();
+  validatePhone();
+  openOv("cartOverlay");
+});
+
+function renderCart() {
+  const box = $("#cartItems");
+  const ids = Object.keys(state.cart);
+  if (!ids.length) {
+    box.innerHTML = `<div class="empty">🛒 السلة فارغة — أضف منتجات من القائمة</div>`;
+  } else {
+    box.innerHTML = ids.map(pid => {
+      const p = state.products.find(x => x.id === pid);
+      if (!p) return "";
+      const q = state.cart[pid];
+      return `
+      <div class="cart-item" data-pid="${pid}">
+        <div class="nm">${esc(p.name)}<small>${fmt(p.price)} × ${q} = ${fmt(p.price * q)}</small></div>
+        <div class="mini-qty">
+          <button data-cact="minus" type="button">−</button>
+          <span class="n">${q}</span>
+          <button data-cact="plus" type="button">+</button>
+        </div>
+        <button class="del" data-cact="del" type="button" aria-label="حذف">🗑️</button>
+      </div>`;
+    }).join("");
+  }
+  $("#cartTotal").textContent = fmt(cartTotal());
+  const ok = ids.length > 0 && phoneValid();
+  $("#btnSend").disabled = !ok;
+}
+
+$("#cartItems").addEventListener("click", e => {
+  const btn = e.target.closest("[data-cact]");
+  if (!btn) return;
+  const pid = e.target.closest(".cart-item").dataset.pid;
+  const act = btn.dataset.cact;
+  if (act === "plus")  setQty(pid, (state.cart[pid] || 0) + 1);
+  if (act === "minus") setQty(pid, (state.cart[pid] || 0) - 1);
+  if (act === "del")   { delete state.cart[pid]; }
+  renderCart(); 
+});
+
+/* ================= التحقق من الهاتف الجزائري ================= */
+function normalizePhone(v) {
+  v = String(v || "").replace(/[\s\-\.\(\)]/g, "");
+  if (/^\+213[567]\d{8}$/.test(v)) return "0" + v.slice(4);
+  if (/^213[567]\d{8}$/.test(v))  return "0" + v.slice(3);
+  if (/^0[567]\d{8}$/.test(v))    return v;
+  return null;
+}
+function phoneValid() { return !!normalizePhone($("#fPhone").value); }
+function validatePhone() {
+  const v = $("#fPhone").value.trim();
+  const ok = normalizePhone(v);
+  const err = $("#phoneErr");
+  if (!v) { err.classList.remove("show"); $("#fPhone").classList.remove("err"); return false; }
+  if (!ok) {
+    err.classList.add("show"); $("#fPhone").classList.add("err");
+    return false;
+  }
+  err.classList.remove("show"); $("#fPhone").classList.remove("err");
+  if (v !== ok) $("#fPhone").value = ok; // تحويل تلقائي للصيغة المحلية
+  return true;
+}
+$("#fPhone").addEventListener("input", () => { validatePhone(); renderCart(); });
+
+/* ================= إرسال الطلب عبر واتساب ================= */
+$("#btnSend").addEventListener("click", () => {
+  if (!Object.keys(state.cart).length) return toast("السلة فارغة، أضف منتجات أولاً", "warn");
+  if (!validatePhone()) return toast("رقم الهاتف غير صحيح — راجع الصيغة المطلوبة", "err");
+  const phone = normalizePhone($("#fPhone").value);
+  const name = $("#fName").value.trim();
+  const addr = $("#fAddr").value.trim();
+  const note = $("#fNote").value.trim();
+
+  let msg = `🍕 *${SHOP_NAME}* — طلب جديد\n`;
+  msg += `━━━━━━━━━━━━━━\n`;
+  Object.entries(state.cart).forEach(([pid, q]) => {
+    const p = state.products.find(x => x.id === pid);
+    if (p) msg += `• ${p.name}\n   الكمية: ${q} × ${p.price} دج = ${p.price * q} دج\n`;
+  });
+  msg += `━━━━━━━━━━━━━━\n💰 *المجموع: ${cartTotal()} دج*\n`;
+  msg += `━━━━━━━━━━━━━━\n👤 الاسم: ${name || "غير مذكور"}\n📞 الهاتف: ${phone}\n`;
+  msg += `📍 العنوان: ${addr || "غير مذكور"}\n`;
+  if (note) msg += `📝 ملاحظة: ${note}\n`;
+  msg += `⏰ الطلب عند الطلب — التوصيل داخل صبرة (تلمسان)`;
+
+  const urls = waUrls(WHATSAPP_INTL, msg);
+  try { navigator.clipboard.writeText(msg); } catch (e) {}
+  openWhatsApp(urls.web);
+  toast("تم تجهيز طلبك ✅ — جرّب الرابط في اللوحة الخضراء إن لم يُفتح تلقائياً", "ok", 5000);
+});
+</script>
+
+<script>
+/* ================= التقييمات: عرض ================= */
+function openReviews(pid) {
+  const p = state.products.find(x => x.id === pid);
+  $("#revTitle").innerHTML = `⭐ تقييمات: ${esc(p ? p.name : "")} <button class="x" data-close="revOverlay" type="button">✕</button>`;
+  const list = state.reviews[pid] ? Object.values(state.reviews[pid]).sort((a,b) => (b.date||0)-(a.date||0)) : [];
+  $("#revList").innerHTML = list.length ? list.map(r => `
+    <div class="review">
+      <div class="hd"><span class="who">${esc(r.name || "زبون كريم")}</span>
+      <span>${starStr(r.stars)} · ${r.date ? new Date(r.date).toLocaleDateString("ar-DZ") : ""}</span></div>
+      ${r.text ? `<p>${esc(r.text)}</p>` : ""}
+    </div>`).join("")
+    : `<div class="empty">لا توجد تقييمات بعد — كن أول من يقيّم 🌟</div>`;
+  openOv("revOverlay");
+  // ربط زر الإغلاق الديناميكي
+  $("#revTitle .x").onclick = () => closeOv("revOverlay");
+}
+
+/* ================= التقييمات: إضافة ================= */
+function buildStars() {
+  $("#starInput").innerHTML = [1,2,3,4,5].map(i =>
+    `<button type="button" data-star="${i}" class="${i <= state.ratingStars ? "on" : ""}">★</button>`).join("");
+}
+$("#starInput").addEventListener("click", e => {
+  const b = e.target.closest("[data-star]");
+  if (!b) return;
+  state.ratingStars = +b.dataset.star;
+  buildStars();
+});
+
+function openRate(pid) {
+  state.ratingPid = pid;
+  state.ratingStars = 0;
+  const p = state.products.find(x => x.id === pid);
+  $("#rateTitle").innerHTML = `⭐ قيّم: ${esc(p ? p.name : "")} <button class="x" data-close="rateOverlay" type="button">✕</button>`;
+  $("#rName").value = ""; $("#rText").value = "";
+  buildStars();
+  openOv("rateOverlay");
+  $("#rateTitle .x").onclick = () => closeOv("rateOverlay");
+}
+
+$("#btnRate").addEventListener("click", () => {
+  if (!state.ratingStars) return toast("اختر عدد النجوم أولاً ⭐", "warn");
+  const r = {
+    id: "r" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    stars: state.ratingStars,
+    name: $("#rName").value.trim().slice(0, 40),
+    text: $("#rText").value.trim().slice(0, 400),
+    date: Date.now()
+  };
+  saveReview(state.ratingPid, r);
+  closeOv("rateOverlay");
+  toast("شكراً! تم نشر تقييمك 🌟");
+});
+
+/* ================= لوحة التحكم ================= */
+$("#adminLink").addEventListener("click", () => {
+  if (state.adminOpen) { renderAdmin(); openOv("adminOverlay"); }
+  else { $("#pwd").value = ""; $("#pwdErr").classList.remove("show"); openOv("pwdOverlay"); }
+});
+$("#btnPwd").addEventListener("click", tryLogin);
+$("#pwd").addEventListener("keydown", e => { if (e.key === "Enter") tryLogin(); });
+function tryLogin() {
+  const norm = s => s.replace(/\s+/g, " ").trim();
+  if (norm($("#pwd").value) === norm(ADMIN_PASSWORD)) {
+    state.adminOpen = true;
+    closeOv("pwdOverlay");
+    renderAdmin();
+    openOv("adminOverlay");
+    toast("مرحباً بك أيها المالك 👋", "ok");
+  } else {
+    $("#pwdErr").classList.add("show");
+    toast("كلمة السر غير صحيحة", "err");
+  }
+}
+
+function readMedia(file) {
+  return new Promise((res, rej) => {
+    if (!file) return res({ media: null, mediaType: null });
+    if (file.size > 20 * 1024 * 1024) return rej("حجم الملف يتجاوز 20 ميغابايت");
+    // ضغط الصور تلقائياً لتوفير مساحة التخزين
+    if (file.type.startsWith("image/")) {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        const MAX = 800;
+        let w = img.width, h = img.height;
+        if (w > MAX || h > MAX) { const s = MAX / Math.max(w, h); w = Math.round(w*s); h = Math.round(h*s); }
+        const cv = document.createElement("canvas");
+        cv.width = w; cv.height = h;
+        cv.getContext("2d").drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        res({ media: cv.toDataURL("image/jpeg", 0.82), mediaType: "image" });
+      };
+      img.onerror = () => rej("تعذر قراءة الصورة");
+      img.src = url;
+      return;
+    }
+    const rd = new FileReader();
+    rd.onload = () => res({ media: rd.result, mediaType: file.type.startsWith("video") ? "video" : "image" });
+    rd.onerror = () => rej("تعذر قراءة الملف");
+    rd.readAsDataURL(file);
+  });
+}
+
+$("#btnAddP").addEventListener("click", async () => {
+  const name = $("#npName").value.trim(), ingredients = $("#npIng").value.trim();
+  const price = parseInt($("#npPrice").value, 10);
+  if (!name || !ingredients || !(price >= 0)) return toast("أكمل الاسم والمكونات والسعر", "warn");
+  const btn = $("#btnAddP"); btn.disabled = true; btn.textContent = "جارٍ الرفع...";
+  try {
+    const { media, mediaType } = await readMedia($("#npMedia").files[0]);
+    saveProduct("p" + Date.now().toString(36), { name, ingredients, price, media, mediaType });
+    $("#npName").value = ""; $("#npIng").value = ""; $("#npPrice").value = ""; $("#npMedia").value = "";
+    toast("تمت إضافة المنتج ✅");
+  } catch (e) { toast(String(e), "err"); }
+  btn.disabled = false; btn.textContent = "إضافة المنتج";
+});
+
+function renderAdmin() {
+  if (!state.adminOpen) return;
+  // المنتجات
+  $("#apProducts").innerHTML = state.products.map(p => `
+    <div class="ap-item" data-pid="${p.id}">
+      <input class="e-name" value="${esc(p.name)}" placeholder="الاسم">
+      <input class="e-ing" value="${esc(p.ingredients)}" placeholder="المكونات">
+      <input class="e-price" type="number" min="0" value="${p.price}" placeholder="السعر (دج)">
+      <div class="ap-row">
+        <button class="btn-sm btn-save" data-a="save" type="button">💾 حفظ</button>
+        <label class="btn-sm btn-grey" style="cursor:pointer;">🖼️ تغيير الوسائط
+          <input type="file" accept="image/*,video/*" data-a="media" hidden>
+        </label>
+        <button class="btn-sm btn-del" data-a="del" type="button">🗑️ حذف</button>
+      </div>
+    </div>`).join("") || `<div class="empty">لا منتجات</div>`;
+  // التقييمات
+  let revs = [];
+  Object.entries(state.reviews).forEach(([pid, rs]) => {
+    const p = state.products.find(x => x.id === pid);
+    Object.entries(rs || {}).forEach(([rid, r]) => revs.push({ pid, rid, r, pname: p ? p.name : "منتج محذوف" }));
+  });
+  revs.sort((a, b) => (b.r.date || 0) - (a.r.date || 0));
+  $("#apReviews").innerHTML = revs.length ? revs.map(x => `
+    <div class="ap-item">
+      <b>${starStr(x.r.stars)}</b> — ${esc(x.r.name || "زبون كريم")} <small style="color:var(--muted)">(${esc(x.pname)})</small>
+      ${x.r.text ? `<div style="font-size:13px;">${esc(x.r.text)}</div>` : ""}
+      <div class="ap-row" style="margin-top:6px;">
+        <button class="btn-sm btn-del" data-a="delrev" data-pid="${x.pid}" data-rid="${x.rid}" type="button">🗑️ حذف التقييم</button>
+      </div>
+    </div>`).join("") : `<div class="empty">لا تقييمات بعد</div>`;
+}
+
+$("#apProducts").addEventListener("click", async e => {
+  const btn = e.target.closest("[data-a]");
+  if (!btn) return;
+  const item = e.target.closest("[data-pid]");
+  const pid = item.dataset.pid;
+  const p = state.products.find(x => x.id === pid);
+  const act = btn.dataset.a;
+
+  if (act === "save") {
+    const name = item.querySelector(".e-name").value.trim();
+    const ingredients = item.querySelector(".e-ing").value.trim();
+    const price = parseInt(item.querySelector(".e-price").value, 10);
+    if (!name || !ingredients || !(price >= 0)) return toast("أكمل الحقول بشكل صحيح", "warn");
+    saveProduct(pid, { ...p, name, ingredients, price });
+    toast("تم حفظ التعديلات ✅");
+  }
+  if (act === "del") {
+    if (!btn.classList.contains("armed")) {
+      btn.classList.add("armed");
+      btn.textContent = "⚠️ اضغط مجدداً للتأكيد";
+      setTimeout(() => { btn.classList.remove("armed"); btn.textContent = "🗑️ حذف"; }, 4000);
+      return;
+    }
+    removeProduct(pid);
+    toast("تم حذف المنتج", "ok");
+  }
+});
+
+$("#apProducts").addEventListener("change", async e => {
+  const inp = e.target.closest('input[data-a="media"]');
+  if (!inp || !inp.files[0]) return;
+  const item = inp.closest("[data-pid]");
+  const pid = item.dataset.pid;
+  const p = state.products.find(x => x.id === pid);
+  try {
+    const { media, mediaType } = await readMedia(inp.files[0]);
+    saveProduct(pid, { ...p, media, mediaType });
+    toast("تم تحديث الصورة/الفيديو ✅");
+  } catch (err) { toast(String(err), "err"); }
+});
+
+$("#apReviews").addEventListener("click", e => {
+  const btn = e.target.closest('[data-a="delrev"]');
+  if (!btn) return;
+  removeReview(btn.dataset.pid, btn.dataset.rid);
+  toast("تم حذف التقييم");
+});
+
+// توجيه أزرار واتساب الثابتة عبر نفس الآلية مع لوحة احتياطية
+document.querySelectorAll('a[href^="https://wa.me/"]').forEach(a => {
+  a.addEventListener("click", e => {
+    e.preventDefault();
+    openWhatsApp(a.href);
+  });
+});
+
+/* ================= الإقلاع ================= */
+initDB();
+</script>
+</body>
+</html>
