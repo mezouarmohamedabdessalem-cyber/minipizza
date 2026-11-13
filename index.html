@@ -610,7 +610,9 @@ $("#cartItems").addEventListener("click", e => {
 
 /* ================= التحقق من الهاتف الجزائري ================= */
 function normalizePhone(v) {
-  v = String(v || "").replace(/[\s\-\.\(\)]/g, "");
+    v = String(v || "").replace(/[\u0660-\u0669]/g, d => d.charCodeAt(0) - 0x0660)
+    .replace(/[\u06F0-\u06F9]/g, d => d.charCodeAt(0) - 0x06F0)
+    .replace(/[\s\-\.\(\)]/g, "");
   if (/^\+213[567]\d{8}$/.test(v)) return "0" + v.slice(4);
   if (/^213[567]\d{8}$/.test(v))  return "0" + v.slice(3);
   if (/^0[567]\d{8}$/.test(v))    return v;
