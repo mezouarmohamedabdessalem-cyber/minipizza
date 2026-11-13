@@ -340,16 +340,12 @@ function waUrls(intlNumber, text) {
   };
 }
 function openWhatsApp(url) {
-  // رابط احتياطي: إن كان الرابط الرئيسي web.whatsapp.com ولم ينجح نجرب wa.me
-  const alt = url.includes("web.whatsapp.com") ? url.replace("https://web.whatsapp.com/send?phone=", "https://wa.me/").replace("&text=", "?text=") : url;
-  let a = document.createElement("a");
-  a.href = url; a.target = "_blank"; a.rel = "noopener";
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => {
-    a = document.createElement("a");
-    a.href = alt; a.target = "_blank"; a.rel = "noopener";
-    document.body.appendChild(a); a.click(); a.remove();
-  }, 1200);
+  const app = url.replace("https://web.whatsapp.com/send?phone=", "https://wa.me/").replace("&text=", "?text=");
+  if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    window.location.href = app;
+  } else {
+    window.open(url, "_blank", "noopener");
+  }
   setTimeout(() => showWaFallback(url), 2500);
 }
 let _waPanel = null;
