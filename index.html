@@ -859,7 +859,7 @@ $("#apReviews").addEventListener("click", e => {
 });
 
 // توجيه أزرار واتساب الثابتة عبر نفس الآلية مع لوحة احتياطية
-document.querySelectorAll('a[href^="https://wa.me/"]').forEach(a => {
+document.querySelectorAll('a[href*="whatsapp.com/send"]').forEach(a => {
   a.addEventListener("click", e => {
     e.preventDefault();
     openWhatsApp(a.href);
