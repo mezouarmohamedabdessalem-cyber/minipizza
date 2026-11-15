@@ -204,7 +204,7 @@ footer .socials{margin:0 0 14px;}
 .star-input button:active{transform:scale(1.25);}
 
 /* لوحة التحكم */
-.admin-link{position:fixed; bottom:calc(90px + env(safe-area-inset-bottom)); inset-inline-start:12px; z-index:49;
+.admin-link{display:none; position:fixed; bottom:calc(90px + env(safe-area-inset-bottom)); inset-inline-start:12px; z-index:49;
   background:none; color:var(--muted); font-size:12px; opacity:.55; text-decoration:underline;}
 .ap-item{border:1px solid var(--line); border-radius:14px; padding:12px; margin-bottom:12px; background:var(--cream);}
 .ap-item input,.ap-item textarea{width:100%; padding:9px 11px; border:2px solid var(--line); border-radius:10px;
@@ -251,7 +251,6 @@ footer .socials{margin:0 0 14px;}
 .empty{text-align:center; color:var(--muted); padding:34px 10px; font-size:15px;}
 footer{text-align:center; color:var(--muted); font-size:12.5px; padding:26px 0 6px;}
 </style>
-<base target="_blank">
 </head>
 <body>
 
@@ -262,6 +261,7 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; padding:26px 0 6
     <span class="badge">🕐 مفتوح 24 ساعة</span>
     <span class="badge">📍 التوصيل في صبرة — تلمسان فقط</span>
     <span class="badge">💬 الطلب عبر واتساب</span>
+    <span class="badge">💵 سعر التوصيل يُؤكَّد معك عبر واتساب</span>
   </div>
   <a class="wa-mini" href="https://web.whatsapp.com/send?phone=213669957840" target="_blank" rel="noopener">💬 راسلنا على واتساب</a>
   <div class="socials" id="socialsTop"></div>
@@ -624,7 +624,7 @@ function removeReview(pid, rid) {
 
 /* ================= عرض المنتجات ================= */
 function avgStars(pid) {
-  const rs = state.reviews[pid] ? Object.values(state.reviews[pid]) : [];
+  const rs = state.reviews[pid] ? Object.values(state.reviews[pid]).filter(r => r.approved !== false) : [];
   if (!rs.length) return { avg: 0, count: 0 };
   return { avg: rs.reduce((a, r) => a + r.stars, 0) / rs.length, count: rs.length };
 }
@@ -958,10 +958,19 @@ $("#btnSend").addEventListener("click", () => {
   msg += `⏰ الطلب عند الطلب — التوصيل داخل صبرة (تلمسان)`;
 
   try { localStorage.setItem("ps_cust", JSON.stringify({ name, phone, addr })); } catch (e) {}
+  // حفظ نسخة من الطلب في قاعدة البيانات (سجل للمالك) — لا يؤثر على الإرسال إن فشل
+  try {
+    if (db) db.ref("orders/o" + Date.now().toString(36)).set({
+      date: Date.now(), name, phone, addr, note, total: cartTotal(),
+      items: Object.entries(state.cart).map(([pid, q]) => { const p = state.products.find(x => x.id === pid); return p ? { name: p.name, qty: q, price: p.price } : null; }).filter(Boolean)
+    }).catch(() => {});
+  } catch (e) {}
   const urls = waUrls(WHATSAPP_INTL, msg);
   try { navigator.clipboard.writeText(msg); } catch (e) {}
   openWhatsApp(urls.web);
   toast("تم تجهيز طلبك ✅ — جرّب الرابط في اللوحة الخضراء إن لم يُفتح تلقائياً", "ok", 5000);
+  // تفريغ السلة بعد الإرسال لمنع تكرار الطلب بالخطأ
+  state.cart = {}; cartSave(); renderProducts(); renderCart(); closeOv("cartOverlay");
 });
 </script>
 
@@ -970,7 +979,7 @@ $("#btnSend").addEventListener("click", () => {
 function openReviews(pid) {
   const p = state.products.find(x => x.id === pid);
   $("#revTitle").innerHTML = `⭐ تقييمات: ${esc(p ? p.name : "")} <button class="x" data-close="revOverlay" type="button">✕</button>`;
-  const list = state.reviews[pid] ? Object.values(state.reviews[pid]).sort((a,b) => (b.date||0)-(a.date||0)) : [];
+  const list = state.reviews[pid] ? Object.values(state.reviews[pid]).filter(r => r.approved !== false).sort((a,b) => (b.date||0)-(a.date||0)) : [];
   $("#revList").innerHTML = list.length ? list.map(r => `
     <div class="review">
       <div class="hd"><span class="who">${esc(r.name || "زبون كريم")}</span>
@@ -1015,12 +1024,13 @@ $("#btnRate").addEventListener("click", () => {
     stars: state.ratingStars,
     name: $("#rName").value.trim().slice(0, 40),
     text: $("#rText").value.trim().slice(0, 400),
-    date: Date.now()
+    date: Date.now(),
+    approved: false
   };
   const pid = state.ratingPid;
   closeOv("rateOverlay");
   Promise.resolve(saveReview(pid, r))
-    .then(() => { try { localStorage.setItem("ps_rated_" + pid, "1"); } catch (e) {} toast("شكراً! تم نشر تقييمك 🌟"); })
+    .then(() => { try { localStorage.setItem("ps_rated_" + pid, "1"); } catch (e) {} toast("شكراً! وصل تقييمك وسيظهر بعد مراجعته 🌟", "ok", 4500); })
     .catch(() => toast("تعذر نشر التقييم، حاول لاحقاً", "err"));
 });
 
@@ -1107,9 +1117,10 @@ function renderAdmin() {
   revs.sort((a, b) => (b.r.date || 0) - (a.r.date || 0));
   $("#apReviews").innerHTML = revs.length ? revs.map(x => `
     <div class="ap-item">
-      <b>${starStr(x.r.stars)}</b> — ${esc(x.r.name || "زبون كريم")} <small style="color:var(--muted)">(${esc(x.pname)})</small>
+      ${x.r.approved === false ? '<span style="background:#f5b301;color:#222;border-radius:999px;padding:1px 10px;font-size:12px;font-weight:800;">⏳ بانتظار الموافقة</span> ' : ''}<b>${starStr(x.r.stars)}</b> — ${esc(x.r.name || "زبون كريم")} <small style="color:var(--muted)">(${esc(x.pname)})</small>
       ${x.r.text ? `<div style="font-size:13px;">${esc(x.r.text)}</div>` : ""}
       <div class="ap-row" style="margin-top:6px;">
+        ${x.r.approved === false ? `<button class="btn-sm btn-save" data-a="okrev" data-pid="${x.pid}" data-rid="${x.rid}" type="button">✅ موافقة ونشر</button>` : ""}
         <button class="btn-sm btn-del" data-a="delrev" data-pid="${x.pid}" data-rid="${x.rid}" type="button">🗑️ حذف التقييم</button>
       </div>
     </div>`).join("") : `<div class="empty">لا تقييمات بعد</div>`;
@@ -1166,6 +1177,12 @@ $("#apProducts").addEventListener("change", async e => {
 });
 
 $("#apReviews").addEventListener("click", e => {
+  const ok = e.target.closest('[data-a="okrev"]');
+  if (ok) {
+    const r = (state.reviews[ok.dataset.pid] || {})[ok.dataset.rid];
+    if (r) { saveReview(ok.dataset.pid, { ...r, approved: true }); toast("تم نشر التقييم ✅"); }
+    return;
+  }
   const btn = e.target.closest('[data-a="delrev"]');
   if (!btn) return;
   removeReview(btn.dataset.pid, btn.dataset.rid);
@@ -1189,6 +1206,24 @@ document.querySelectorAll('a[href*="whatsapp.com/send"]').forEach(a => {
   $("#socialsTop").innerHTML = h;
   $("#socialsBottom").innerHTML = h;
 })();
+
+/* ================= إظهار رابط الإدارة للمالك فقط ================= */
+(function hiddenAdmin() {
+  const show = () => { $("#adminLink").style.display = "block"; };
+  if (location.hash === "#admin") show();
+  window.addEventListener("hashchange", () => { if (location.hash === "#admin") show(); });
+  let taps = 0, t0 = 0;
+  document.querySelector(".hero h1").addEventListener("click", () => {
+    const now = Date.now(); taps = now - t0 < 1500 ? taps + 1 : 1; t0 = now;
+    if (taps >= 5) { show(); toast("تم إظهار زر الإدارة", "ok", 2000); taps = 0; }
+  });
+})();
+
+/* ================= إغلاق النوافذ بزر Escape ================= */
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  document.querySelectorAll(".overlay.open").forEach(o => o.classList.remove("open"));
+});
 
 /* ================= الإقلاع ================= */
 cartLoad();
