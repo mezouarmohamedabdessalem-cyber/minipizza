@@ -404,6 +404,7 @@ const state = {
   products: [],
   reviews: {},
   cart: {},
+  imgs: {},            // الصور المحمّلة لكل منتج (تُجلب بعد القائمة)
   galIdx: {},          // رقم الصورة المعروضة لكل منتج
   dbReady: false,
   adminOpen: false,
@@ -416,7 +417,15 @@ const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt
 const fmt = n => Number(n).toLocaleString("ar-DZ") + " دج";
 
 /* ================= الصور ================= */
+function inlineImages(p) {
+  let a = [];
+  if (p.images) a = Array.isArray(p.images) ? p.images : Object.values(p.images);
+  else if (p.media && p.mediaType !== "video") a = [p.media];
+  return a.filter(Boolean);
+}
 function getImages(p) {
+  const ex = state.imgs[p.id];
+  if (ex && ex.length) return ex;
   let a = [];
   if (p.images) a = Array.isArray(p.images) ? p.images : Object.values(p.images);
   else if (p.media && p.mediaType !== "video") a = [p.media];   // منتجات قديمة بصورة واحدة
@@ -551,13 +560,13 @@ function initDB() {
       auth = firebase.auth();
       auth.onAuthStateChanged(u => {
         state.adminOpen = !!u;
-        if (u) renderAdmin(); else closeOv("adminOverlay");
+        if (u) { renderAdmin(); migrateImages(); } else closeOv("adminOverlay");
       });
     }
 
     try {
       const cached = JSON.parse(localStorage.getItem("ps_cache_products") || "null");
-      if (cached && cached.length) { state.products = cached; state.dbReady = true; renderProducts(); }
+      if (cached && cached.length) { state.products = cached; state.dbReady = true; renderProducts(); loadMissingImages(); }
     } catch (e) {}
 
     db.ref("products").on("value", snap => {
@@ -568,6 +577,8 @@ function initDB() {
         localStorage.setItem("ps_cache_products", JSON.stringify(state.products.map(p => ({ ...p, images: null, media: null }))));
       } catch (e) {}
       renderProducts(); renderAdmin();
+      loadMissingImages();
+      if (state.adminOpen) migrateImages();
     }, () => {
       state.dbFailed = true; renderProducts();
       toast("تعذر الوصول إلى المنتجات الآن، حاول تحديث الصفحة", "err", 6000);
@@ -584,6 +595,58 @@ function initDB() {
     clearTimeout(failTimer);
     renderProducts();
   }
+}
+/* ===== تحميل الصور بعد ظهور القائمة ===== */
+const _imgReq = {};
+function refreshCardMedia(pid) {
+  const card = document.querySelector('.card[data-pid="' + CSS.escape(pid) + '"]');
+  const p = state.products.find(x => x.id === pid);
+  if (!card || !p) return;
+  const m = card.querySelector(".media");
+  m.className = "media" + (getImages(p).length ? " has-img" : "");
+  m.innerHTML = mediaHTML(p);
+}
+function loadMissingImages() {
+  if (!db) return;
+  const q = state.products.filter(p => !_imgReq[p.id] && !inlineImages(p).length);
+  q.forEach(p => { _imgReq[p.id] = 1; });
+  let i = 0;
+  const worker = async () => {
+    while (i < q.length) {
+      const p = q[i++];
+      try {
+        const v = (await db.ref("productImages/" + p.id).once("value")).val();
+        state.imgs[p.id] = v ? (Array.isArray(v) ? v : Object.values(v)).filter(Boolean) : [];
+      } catch (e) { state.imgs[p.id] = []; delete _imgReq[p.id]; }
+      refreshCardMedia(p.id);
+    }
+  };
+  worker(); worker(); worker();
+}
+/* ===== نقل الصور القديمة تلقائياً (مرة واحدة عند دخول المالك) ===== */
+let _migrating = false;
+async function migrateImages() {
+  if (!db || !state.adminOpen || _migrating) return;
+  const todo = state.products.filter(p => inlineImages(p).length);
+  if (!todo.length) return;
+  _migrating = true;
+  let n = 0;
+  toast("جارٍ تسريع الموقع: نقل الصور... لا تغلق الصفحة", "warn", 5000);
+  try {
+    for (const p of todo) {
+      const imgs = inlineImages(p);
+      await db.ref("productImages/" + p.id).set(imgs);
+      state.imgs[p.id] = imgs;
+      const clean = { ...p }; delete clean.id; delete clean.images;
+      if (clean.mediaType !== "video") { clean.media = null; clean.mediaType = null; }
+      await db.ref("products/" + p.id).set(clean);
+      n++;
+    }
+    toast("تم تسريع الموقع ✅ (" + n + " منتج)", "ok", 5000);
+  } catch (e) {
+    toast("تعذر نقل الصور — تأكد من تحديث القواعد في Firebase", "err", 7000);
+  }
+  _migrating = false;
 }
 function lsLoad() {
   try {
@@ -603,9 +666,20 @@ function lsSave() {
   }
 }
 function saveProduct(id, data, okMsg) {
-  if (db) return db.ref("products/" + id).set(data)
-    .then(() => { if (okMsg) toast(okMsg); return true; })
+  if (db) {
+    const clean = { ...data };
+    let imgs = null;
+    if (clean.images !== undefined) {
+      imgs = clean.images ? (Array.isArray(clean.images) ? clean.images : Object.values(clean.images)).filter(Boolean) : [];
+    }
+    delete clean.images;
+    if (imgs !== null) state.imgs[id] = imgs;
+    const ops = [db.ref("products/" + id).set(clean)];
+    if (imgs !== null) ops.push(imgs.length ? db.ref("productImages/" + id).set(imgs) : db.ref("productImages/" + id).remove());
+    return Promise.all(ops)
+    .then(() => { renderProducts(); renderAdmin(); if (okMsg) toast(okMsg); return true; })
     .catch(() => { toast("تعذر الحفظ — تحقق من الاتصال أو سجّل الدخول من جديد", "err", 5000); return false; });
+  }
   const i = state.products.findIndex(x => x.id === id);
   if (i >= 0) state.products[i] = { id, ...data }; else state.products.push({ id, ...data });
   lsSave(); renderProducts(); renderAdmin();
@@ -613,7 +687,8 @@ function saveProduct(id, data, okMsg) {
   return true;
 }
 function removeProduct(id) {
-  if (db) return Promise.all([db.ref("products/" + id).remove(), db.ref("reviews/" + id).remove()])
+  delete state.imgs[id];
+  if (db) return Promise.all([db.ref("products/" + id).remove(), db.ref("reviews/" + id).remove(), db.ref("productImages/" + id).remove()])
     .then(() => toast("تم حذف المنتج ✅"))
     .catch(() => toast("تعذر الحذف — سجّل الدخول من جديد", "err", 5000));
   state.products = state.products.filter(x => x.id !== id);
