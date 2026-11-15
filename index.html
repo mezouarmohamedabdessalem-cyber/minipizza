@@ -61,14 +61,50 @@ input,textarea{font-family:inherit;}
 /* ===== قائمة المنتجات ===== */
 .section-title{font-size:clamp(24px,6.5vw,32px); font-weight:900; text-align:center; margin:26px 0 4px;}
 .section-sub{text-align:center; color:var(--muted); font-size:14px; margin-bottom:16px;}
-.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; padding-bottom:10px;}
+.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:16px; padding-bottom:10px;}
 @media (max-width:480px){.grid{grid-template-columns:1fr;}}
 .card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;
   display:flex; flex-direction:column; transition:transform .25s, box-shadow .25s; border:1px solid var(--line);}
 .card:hover{transform:translateY(-5px); box-shadow:var(--shadow-lg);}
-.card .media{height:260px; background:linear-gradient(135deg,#ffe1c2,#ffc98a); display:flex; align-items:center; justify-content:center; overflow:hidden;}
-.card .media img,.card .media video{width:100%; height:100%; object-fit:contain;}
+
+/* معرض الصور داخل البطاقة */
+.card .media{position:relative; aspect-ratio:4/3; background:linear-gradient(135deg,#ffe1c2,#ffc98a);
+  display:flex; align-items:center; justify-content:center; overflow:hidden;}
+.card .media video{width:100%; height:100%; object-fit:contain; background:#000;}
 .card .media .emoji{font-size:70px; filter:drop-shadow(0 6px 8px rgba(0,0,0,.2));}
+.gallery{position:absolute; inset:0; display:flex; overflow-x:auto; overflow-y:hidden; direction:ltr;
+  scroll-snap-type:x mandatory; scrollbar-width:none; -webkit-overflow-scrolling:touch;}
+.gallery::-webkit-scrollbar{display:none;}
+.gallery img{flex:0 0 100%; width:100%; height:100%; object-fit:cover; scroll-snap-align:center;
+  scroll-snap-stop:always; cursor:zoom-in; user-select:none; -webkit-user-drag:none;}
+.g-arrow{position:absolute; top:50%; transform:translateY(-50%); width:38px; height:38px; border-radius:50%;
+  background:rgba(0,0,0,.45); color:#fff; font-size:26px; line-height:1; display:flex; align-items:center;
+  justify-content:center; padding-bottom:3px; backdrop-filter:blur(3px); transition:background .2s;}
+.g-arrow:hover{background:rgba(0,0,0,.7);}
+.g-prev{left:8px;} .g-next{right:8px;}
+.g-dots{position:absolute; bottom:9px; inset-inline:0; display:flex; justify-content:center; gap:6px; direction:ltr; pointer-events:none;}
+.g-dots .dot{pointer-events:auto; width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.55);
+  box-shadow:0 1px 3px rgba(0,0,0,.4); padding:0; transition:all .2s;}
+.g-dots .dot.on{background:#fff; width:20px; border-radius:6px;}
+.g-count{position:absolute; top:9px; left:9px; background:rgba(0,0,0,.5); color:#fff; font-size:12px; font-weight:800;
+  padding:2px 10px; border-radius:999px; direction:ltr; pointer-events:none;}
+.g-zoomhint{position:absolute; top:9px; right:9px; background:rgba(0,0,0,.5); color:#fff; font-size:12px;
+  padding:2px 9px; border-radius:999px; pointer-events:none;}
+@media (hover:none){.g-arrow{display:none;}}
+.card .media.has-img{aspect-ratio:auto; background:var(--card);}
+.card .media.has-img img.single{display:block; width:100%; height:auto; max-height:480px; object-fit:contain; cursor:zoom-in; user-select:none; -webkit-user-drag:none;}
+.card .media.has-img .gallery{position:relative; inset:auto; aspect-ratio:4/3; width:100%;}
+
+/* روابط التواصل */
+.socials{display:flex; flex-wrap:wrap; gap:10px; justify-content:center;}
+.soc{display:inline-flex; align-items:center; gap:8px; padding:9px 20px; border-radius:999px; color:#fff; font-weight:800;
+  font-size:14.5px; text-decoration:none; box-shadow:0 6px 16px rgba(0,0,0,.22); transition:transform .15s;}
+.soc:active{transform:scale(.95);}
+.soc svg{width:18px; height:18px; fill:currentColor;}
+.soc.fb{background:#1877f2;} .soc.tt{background:#111; border:1px solid rgba(255,255,255,.35);}
+.hero .socials{margin-top:14px;}
+footer .socials{margin:0 0 14px;}
+
 .card .body{padding:14px 16px 16px; display:flex; flex-direction:column; gap:8px; flex:1;}
 .card h3{font-size:19px; font-weight:900;}
 .card .ing{color:var(--muted); font-size:13.5px; flex:1;}
@@ -84,9 +120,6 @@ input,textarea{font-family:inherit;}
 .qty button{width:42px; height:42px; font-size:22px; font-weight:900; background:var(--cream); color:var(--red); transition:background .15s;}
 .qty button:active{background:#ffe0dd;}
 .qty .n{flex:1; text-align:center; font-weight:900; font-size:17px;}
-.btn-add{flex:1; background:linear-gradient(135deg,var(--red),var(--red-dark)); color:#fff; font-weight:900;
-  font-size:15px; border-radius:999px; padding:10px; box-shadow:0 6px 14px rgba(215,38,30,.35); transition:transform .12s;}
-.btn-add:active{transform:scale(.96);}
 .btn-rate{background:none; border:2px solid var(--gold); color:#b98700; border-radius:999px;
   padding:8px 14px; font-weight:800; font-size:13px; white-space:nowrap; transition:transform .12s;}
 @media (prefers-color-scheme: dark){.btn-rate{color:var(--gold);}}
@@ -103,7 +136,6 @@ input,textarea{font-family:inherit;}
   font-size:16px; padding:13px 22px; border-radius:999px; box-shadow:0 8px 20px rgba(215,38,30,.4);
   transition:transform .12s, opacity .2s; white-space:nowrap;}
 .btn-cart:active{transform:scale(.96);}
-.btn-cart:disabled{opacity:.45; box-shadow:none; cursor:not-allowed;}
 .bump{animation:bump .35s;}
 @keyframes bump{40%{transform:scale(1.12);}}
 
@@ -165,11 +197,31 @@ input,textarea{font-family:inherit;}
 .ap-row{display:flex; gap:8px; flex-wrap:wrap;}
 .btn-sm{padding:8px 14px; border-radius:999px; font-weight:800; font-size:13px; transition:transform .12s, opacity .2s;}
 .btn-sm:active{transform:scale(.95);}
+.btn-sm:disabled{opacity:.5;}
 .btn-save{background:linear-gradient(135deg,var(--red),var(--red-dark)); color:#fff;}
 .btn-del{background:#fff; border:2px solid var(--red); color:var(--red);}
 .btn-del.armed{background:var(--red); color:#fff;}
 .btn-grey{background:var(--line); color:var(--text);}
-.file-hint{font-size:11.5px; color:var(--muted);}
+.file-hint{font-size:11.5px; color:var(--muted); margin-bottom:6px;}
+.thumbs{display:flex; gap:8px; flex-wrap:wrap; margin:4px 0 10px;}
+.thumb{position:relative; width:72px; height:72px; border-radius:10px; overflow:hidden; border:2px solid var(--line);}
+.thumb img{width:100%; height:100%; object-fit:cover; display:block;}
+.thumb button{position:absolute; top:2px; right:2px; width:22px; height:22px; border-radius:50%;
+  background:rgba(215,38,30,.92); color:#fff; font-size:12px; font-weight:900; line-height:1; padding:0;}
+
+/* العرض الكامل للصورة */
+.lb{position:fixed; inset:0; z-index:150; background:rgba(0,0,0,.95); display:none; flex-direction:column; direction:ltr;}
+.lb.open{display:flex;}
+.lb-top{display:flex; justify-content:space-between; align-items:center;
+  padding:calc(10px + env(safe-area-inset-top)) 14px 10px; color:#fff; font-weight:800; position:relative; z-index:2;}
+.lb-btn{width:42px; height:42px; border-radius:50%; background:rgba(255,255,255,.16); color:#fff; font-size:20px; font-weight:900;}
+.lb-stage{flex:1; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; touch-action:none;}
+.lb-stage img{max-width:100%; max-height:100%; object-fit:contain; user-select:none; -webkit-user-drag:none;
+  transform-origin:center center; will-change:transform; cursor:zoom-in;}
+.lb-nav{position:absolute; top:50%; transform:translateY(-50%); width:48px; height:64px; background:rgba(255,255,255,.14);
+  color:#fff; font-size:34px; z-index:2; border-radius:12px; padding-bottom:5px;}
+.lb-prev{left:8px;} .lb-next{right:8px;}
+.lb-hint{text-align:center; color:rgba(255,255,255,.65); font-size:12.5px; padding:6px 0 calc(12px + env(safe-area-inset-bottom)); direction:rtl;}
 
 /* التنبيهات */
 #toasts{position:fixed; top:calc(14px + env(safe-area-inset-top)); inset-inline:0; z-index:200;
@@ -197,6 +249,7 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; padding:26px 0 6
     <span class="badge">💬 الطلب عبر واتساب</span>
   </div>
   <a class="wa-mini" href="https://web.whatsapp.com/send?phone=213669957840" target="_blank" rel="noopener">💬 راسلنا على واتساب</a>
+  <div class="socials" id="socialsTop"></div>
 </header>
 
 <div class="wrap">
@@ -211,7 +264,7 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; padding:26px 0 6
   <div class="grid" id="products"></div>
 </div>
 
-<footer>بيتزا صبرة © 2026 — صبرة، ولاية تلمسان، الجزائر 🇩🇿<br>للطلب والاستفسار: 0669957840</footer>
+<footer><div class="socials" id="socialsBottom"></div>بيتزا صبرة © 2026 — صبرة، ولاية تلمسان، الجزائر 🇩🇿<br>للطلب والاستفسار: 0669957840</footer>
 <button class="admin-link" id="adminLink" type="button">إدارة الموقع</button>
 
 <!-- شريط السلة -->
@@ -220,6 +273,20 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; padding:26px 0 6
     <div class="cart-info" id="cartInfo">السلة فارغة</div>
     <button class="btn-cart" id="openCart" type="button">🛒 السلة وإرسال الطلب</button>
   </div>
+</div>
+
+<!-- العرض الكامل للصور -->
+<div class="lb" id="lb">
+  <div class="lb-top">
+    <span id="lbCount"></span>
+    <button class="lb-btn" id="lbClose" type="button" aria-label="إغلاق">✕</button>
+  </div>
+  <div class="lb-stage" id="lbStage">
+    <img id="lbImg" alt="" draggable="false">
+    <button class="lb-nav lb-prev" id="lbPrev" type="button" aria-label="السابقة">‹</button>
+    <button class="lb-nav lb-next" id="lbNext" type="button" aria-label="التالية">›</button>
+  </div>
+  <div class="lb-hint">اضغط مرتين أو اقرص بإصبعين للتكبير — اسحب يميناً أو يساراً للتنقل بين الصور</div>
 </div>
 
 <!-- نافذة السلة وإتمام الطلب -->
@@ -276,8 +343,8 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; padding:26px 0 6
       <input id="npName" type="text" placeholder="اسم المنتج">
       <input id="npIng" type="text" placeholder="المكونات">
       <input id="npPrice" type="number" min="0" step="50" placeholder="السعر (دج)">
-      <input id="npMedia" type="file" accept="image/*,video/*">
-      <div class="file-hint">صورة أو فيديو حتى 20 ميغابايت (اختياري)</div>
+      <input id="npMedia" type="file" accept="image/*">
+      <div class="file-hint">صورة واحدة للمنتج، تُحفظ بجودة عالية ويمكن للزبون تكبيرها.</div>
       <button class="btn-sm btn-save" id="btnAddP" type="button">إضافة المنتج</button>
     </div>
     <h4 style="margin:14px 0 8px;">🍕 المنتجات</h4>
@@ -294,12 +361,7 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; padding:26px 0 6
 
 <script>
 /* ============================================================
-   ⚙️ إعدادات المالك — عدّل هذا القسم فقط
-   ------------------------------------------------------------
-   لكي تُحفظ المنتجات والتقييمات في قاعدة بيانات مشتركة يراها
-   كل الزبائن مباشرة، أنشئ مشروعاً مجانياً على firebase.google.com
-   ثم فعّل Realtime Database (قواعد القراءة/الكتابة: true) وانسخ
-   بيانات التهيئة هنا. بدونها يعمل الموقع بوضع محلي مؤقت.
+   ⚙️ إعدادات المالك
 ============================================================ */
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyDu-ruMq3CoGS4qxn1lrMND-RKdtcgfMeU",
@@ -313,12 +375,17 @@ const FIREBASE_CONFIG = {
 const WHATSAPP_INTL = "213669957840";
 const SHOP_NAME = "بيتزا صبرة";
 const ADMIN_PASSWORD = "محمد مزوار 2007";
+const MAX_IMGS = 1;   // صورة واحدة لكل منتج
+// 🔗 ضع روابط صفحاتك هنا (اتركها فارغة "" لإخفاء الزر)
+const FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61596554907138";
+const TIKTOK_URL   = "https://www.tiktok.com/@minipizzasabra";
 
 /* ================= الحالة العامة ================= */
 const state = {
-  products: [],          // {id,name,ingredients,price,media,mediaType}
-  reviews: {},           // {productId: [{id,stars,name,text,date}]}
-  cart: {},            // {productId: qty}
+  products: [],
+  reviews: {},
+  cart: {},
+  galIdx: {},          // رقم الصورة المعروضة لكل منتج
   dbReady: false,
   adminOpen: false,
   dbFailed: false,
@@ -329,13 +396,50 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmt = n => Number(n).toLocaleString("ar-DZ") + " دج";
 
-/* ================= فتح واتساب — بكل الطرق الممكنة ================= */
+/* ================= الصور ================= */
+function getImages(p) {
+  let a = [];
+  if (p.images) a = Array.isArray(p.images) ? p.images : Object.values(p.images);
+  else if (p.media && p.mediaType !== "video") a = [p.media];   // منتجات قديمة بصورة واحدة
+  return a.filter(Boolean);
+}
+function withImages(p, arr) {
+  const keepVideo = p.mediaType === "video";
+  const o = { ...p, images: arr };
+  if (!keepVideo) { o.media = null; o.mediaType = null; }
+  delete o.id;
+  return o;
+}
+function readImage(file) {
+  return new Promise((res, rej) => {
+    if (!file || !file.type.startsWith("image/")) return rej("الملف ليس صورة");
+    if (file.size > 25 * 1024 * 1024) return rej("الصورة كبيرة جداً (أكثر من 25 ميغابايت)");
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 1800;
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if (w > MAX || h > MAX) { const s = MAX / Math.max(w, h); w = Math.round(w * s); h = Math.round(h * s); }
+      const cv = document.createElement("canvas");
+      cv.width = w; cv.height = h;
+      const ctx = cv.getContext("2d");
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      let q = 0.92, out = cv.toDataURL("image/jpeg", q);
+      while (out.length > 700000 && q > 0.5) { q -= 0.08; out = cv.toDataURL("image/jpeg", q); }
+      res(out);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rej("تعذر قراءة الصورة"); };
+    img.src = url;
+  });
+}
+
+/* ================= فتح واتساب ================= */
 function waUrls(intlNumber, text) {
   const enc = encodeURIComponent(text || "");
   return {
-    // للكمبيوتر: واتساب ويب مباشرة (يتجاوز api.whatsapp.com المحظور)
     web: "https://web.whatsapp.com/send?phone=" + intlNumber + (enc ? "&text=" + enc : ""),
-    // للهاتف: wa.me يفتح التطبيق
     app: "https://wa.me/" + intlNumber + (enc ? "?text=" + enc : "")
   };
 }
@@ -365,7 +469,7 @@ function showWaFallback(url) {
   setTimeout(() => { if (d.parentElement) d.remove(); }, 60000);
 }
 
-/* ================= التنبيهات (Toast) ================= */
+/* ================= التنبيهات ================= */
 function toast(msg, type = "ok", ms = 3200) {
   const t = document.createElement("div");
   t.className = "toast " + type;
@@ -391,7 +495,6 @@ const DEFAULTS = [
 ];
 
 function initDB() {
-  // مؤقت أمان: إن تعذّر الوصول بعد 10 ثوانٍ نُعلن الفشل
   const failTimer = setTimeout(() => {
     if (!state.dbReady) {
       state.dbFailed = true;
@@ -419,12 +522,10 @@ function initDB() {
     });
 
     db.ref("reviews").on("value", snap => {
-      const v = snap.val() || {};
-      state.reviews = v;
+      state.reviews = snap.val() || {};
       renderProducts(); renderAdmin();
     });
   } catch (e) {
-    // وضع محلي احتياطي — الحفظ في متصفحك يعمل بشكل كامل
     lsLoad();
     if (!state.products.length) state.products = [...DEFAULTS];
     state.dbFailed = false;
@@ -433,7 +534,6 @@ function initDB() {
     toast("يعمل الموقع بوضع محلي — بياناتك محفوظة في هذا المتصفح ✅", "ok", 5000);
   }
 }
-/* ----- وضع الحفظ المحلي (localStorage) عند غياب Firebase ----- */
 function lsLoad() {
   try {
     const p = JSON.parse(localStorage.getItem("ps_products") || "null");
@@ -448,11 +548,11 @@ function lsSave() {
     localStorage.setItem("ps_products", JSON.stringify(p));
     localStorage.setItem("ps_reviews", JSON.stringify(state.reviews));
   } catch (e) {
-    toast("مساحة التخزين ممتلئة — احذف بعض الصور القديمة أو استخدم صوراً أصغر", "err", 6000);
+    toast("مساحة التخزين ممتلئة — احذف بعض الصور القديمة", "err", 6000);
   }
 }
 function saveProduct(id, data) {
-  if (db) return db.ref("products/" + id).set(data);
+  if (db) return db.ref("products/" + id).set(data).catch(() => toast("تعذر الحفظ — تحقق من الاتصال أو قلّل عدد الصور", "err", 5000));
   const i = state.products.findIndex(x => x.id === id);
   if (i >= 0) state.products[i] = { id, ...data }; else state.products.push({ id, ...data });
   lsSave(); renderProducts(); renderAdmin();
@@ -485,6 +585,30 @@ function starStr(avg) {
   return "★".repeat(full) + "☆".repeat(5 - full);
 }
 
+function mediaHTML(p) {
+  const imgs = getImages(p);
+  if (imgs.length) {
+    const cur = Math.min(state.galIdx[p.id] || 0, imgs.length - 1);
+    let h = `<div class="gallery" data-g="${p.id}">` +
+      imgs.map((s, i) => `<img src="${esc(s)}" alt="${esc(p.name)}" ${i ? 'loading="lazy"' : ""} data-act="zoom" data-i="${i}" draggable="false">`).join("") +
+      `</div>`;
+    if (imgs.length === 1) {
+      return `<img class="single" src="${esc(imgs[0])}" alt="${esc(p.name)}" data-act="zoom" data-i="0" draggable="false"><span class="g-zoomhint">🔍 اضغط للتكبير</span>`;
+    }
+    if (imgs.length > 1) {
+      h += `<button class="g-arrow g-prev" data-act="gprev" type="button" aria-label="السابقة">‹</button>
+            <button class="g-arrow g-next" data-act="gnext" type="button" aria-label="التالية">›</button>
+            <span class="g-count">${cur + 1}/${imgs.length}</span>
+            <div class="g-dots">${imgs.map((_, i) => `<button class="dot ${i === cur ? "on" : ""}" data-act="gdot" data-i="${i}" type="button" aria-label="صورة ${i + 1}"></button>`).join("")}</div>`;
+    }
+    return h;
+  }
+  if (p.media && p.mediaType === "video") {
+    return `<video src="${esc(p.media)}" muted loop playsinline controls></video>`;
+  }
+  return `<span class="emoji">🍕</span>`;
+}
+
 function renderProducts() {
   const grid = $("#products");
   if (!state.products.length) {
@@ -496,14 +620,9 @@ function renderProducts() {
   grid.innerHTML = state.products.map(p => {
     const { avg, count } = avgStars(p.id);
     const qty = state.cart[p.id] || 0;
-    const media = p.media
-      ? (p.mediaType === "video"
-          ? `<video src="${p.media}" muted loop playsinline onmouseover="this.play()" onmouseout="this.pause()"></video>`
-          : `<img src="${p.media}" alt="${esc(p.name)}" loading="lazy">`)
-      : `<span class="emoji">🍕</span>`;
     return `
     <div class="card" data-pid="${p.id}">
-      <div class="media">${media}</div>
+      <div class="media ${getImages(p).length ? "has-img" : ""}">${mediaHTML(p)}</div>
       <div class="body">
         <h3>${esc(p.name)}</h3>
         <p class="ing">${esc(p.ingredients)}</p>
@@ -523,6 +642,11 @@ function renderProducts() {
       </div>
     </div>`;
   }).join("");
+  // استرجاع موضع المعرض بعد إعادة الرسم
+  grid.querySelectorAll(".gallery").forEach(g => {
+    const i = state.galIdx[g.dataset.g] || 0;
+    if (i) g.scrollLeft = i * g.clientWidth;
+  });
   updateCartBar();
 }
 
@@ -536,12 +660,132 @@ $("#products").addEventListener("click", e => {
   if (act === "minus") setQty(pid, (state.cart[pid] || 0) - 1);
   if (act === "rate")  openRate(pid);
   if (act === "showrev") openReviews(pid);
+  if (act === "zoom") {
+    const p = state.products.find(x => x.id === pid);
+    if (p) openLb(getImages(p), +btn.dataset.i || 0);
+  }
+  if (act === "gprev" || act === "gnext") {
+    const g = card.querySelector(".gallery");
+    g.scrollBy({ left: (act === "gnext" ? 1 : -1) * g.clientWidth, behavior: "smooth" });
+  }
+  if (act === "gdot") {
+    const g = card.querySelector(".gallery");
+    g.scrollTo({ left: (+btn.dataset.i) * g.clientWidth, behavior: "smooth" });
+  }
 });
+// تحديث النقاط والعداد أثناء التمرير
+$("#products").addEventListener("scroll", e => {
+  const g = e.target;
+  if (!g.classList || !g.classList.contains("gallery")) return;
+  const idx = Math.round(g.scrollLeft / (g.clientWidth || 1));
+  state.galIdx[g.dataset.g] = idx;
+  const m = g.parentElement;
+  m.querySelectorAll(".dot").forEach((d, k) => d.classList.toggle("on", k === idx));
+  const c = m.querySelector(".g-count");
+  if (c) c.textContent = (idx + 1) + "/" + g.children.length;
+}, true);
 
 function setQty(pid, q) {
   if (q <= 0) delete state.cart[pid]; else state.cart[pid] = Math.min(q, 99);
   renderProducts();
 }
+
+/* ================= العرض الكامل للصور ================= */
+const lb = { imgs: [], i: 0, s: 1, tx: 0, ty: 0 };
+function lbApply() { $("#lbImg").style.transform = `translate(${lb.tx}px,${lb.ty}px) scale(${lb.s})`; }
+function lbReset() { lb.s = 1; lb.tx = 0; lb.ty = 0; lbApply(); }
+function lbShow() {
+  $("#lbImg").src = lb.imgs[lb.i];
+  $("#lbCount").textContent = lb.imgs.length > 1 ? (lb.i + 1) + " / " + lb.imgs.length : "";
+  const multi = lb.imgs.length > 1;
+  $("#lbPrev").style.display = multi ? "" : "none";
+  $("#lbNext").style.display = multi ? "" : "none";
+  lbReset();
+}
+function openLb(imgs, i) {
+  if (!imgs.length) return;
+  lb.imgs = imgs; lb.i = i;
+  lbShow();
+  $("#lb").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeLb() {
+  $("#lb").classList.remove("open");
+  document.body.style.overflow = "";
+}
+function lbGo(d) {
+  if (lb.imgs.length < 2) return;
+  lb.i = (lb.i + d + lb.imgs.length) % lb.imgs.length;
+  lbShow();
+}
+function lbToggleZoom() {
+  if (lb.s > 1) lbReset(); else { lb.s = 2.5; lbApply(); }
+}
+$("#lbClose").addEventListener("click", closeLb);
+$("#lbPrev").addEventListener("click", () => lbGo(-1));
+$("#lbNext").addEventListener("click", () => lbGo(1));
+document.addEventListener("keydown", e => {
+  if (!$("#lb").classList.contains("open")) return;
+  if (e.key === "Escape") closeLb();
+  if (e.key === "ArrowLeft") lbGo(-1);
+  if (e.key === "ArrowRight") lbGo(1);
+});
+(function setupLbGestures() {
+  const stage = $("#lbStage"), img = $("#lbImg");
+  const dist = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+  let g = null, lastTap = 0;
+  stage.addEventListener("touchstart", e => {
+    if (e.target.closest(".lb-nav")) return;
+    if (e.touches.length === 2) {
+      g = { type: "pinch", d: dist(e.touches), s: lb.s };
+    } else if (e.touches.length === 1) {
+      const t = e.touches[0];
+      g = { type: "pan", x: t.clientX, y: t.clientY, tx: lb.tx, ty: lb.ty, moved: false, dx: 0, dy: 0 };
+    }
+  }, { passive: true });
+  stage.addEventListener("touchmove", e => {
+    if (!g) return;
+    e.preventDefault();
+    if (g.type === "pinch" && e.touches.length === 2) {
+      lb.s = Math.min(5, Math.max(1, g.s * dist(e.touches) / g.d));
+      if (lb.s === 1) { lb.tx = 0; lb.ty = 0; }
+      lbApply();
+    } else if (g.type === "pan" && e.touches.length === 1) {
+      const t = e.touches[0];
+      g.dx = t.clientX - g.x; g.dy = t.clientY - g.y;
+      if (Math.abs(g.dx) > 8 || Math.abs(g.dy) > 8) g.moved = true;
+      if (lb.s > 1) { lb.tx = g.tx + g.dx; lb.ty = g.ty + g.dy; lbApply(); }
+    }
+  }, { passive: false });
+  stage.addEventListener("touchend", e => {
+    if (!g) return;
+    if (g.type === "pan" && e.touches.length === 0) {
+      if (!g.moved) {
+        const now = Date.now();
+        if (now - lastTap < 300) { lbToggleZoom(); lastTap = 0; } else lastTap = now;
+      } else if (lb.s === 1 && Math.abs(g.dx) > 60 && Math.abs(g.dy) < 90) {
+        lbGo(g.dx < 0 ? 1 : -1);
+      }
+    }
+    if (e.touches.length === 0) { g = null; if (lb.s < 1.05) lbReset(); }
+  });
+  // الكمبيوتر: نقر مزدوج وعجلة الفأرة وسحب
+  img.addEventListener("dblclick", lbToggleZoom);
+  stage.addEventListener("wheel", e => {
+    e.preventDefault();
+    lb.s = Math.min(5, Math.max(1, lb.s + (e.deltaY < 0 ? 0.3 : -0.3)));
+    if (lb.s === 1) { lb.tx = 0; lb.ty = 0; }
+    lbApply();
+  }, { passive: false });
+  let md = null;
+  img.addEventListener("mousedown", e => {
+    if (lb.s > 1) { md = { x: e.clientX, y: e.clientY, tx: lb.tx, ty: lb.ty }; e.preventDefault(); }
+  });
+  window.addEventListener("mousemove", e => {
+    if (md) { lb.tx = md.tx + e.clientX - md.x; lb.ty = md.ty + e.clientY - md.y; lbApply(); }
+  });
+  window.addEventListener("mouseup", () => { md = null; });
+})();
 
 /* ================= السلة ================= */
 function cartCount() { return Object.values(state.cart).reduce((a, b) => a + b, 0); }
@@ -600,13 +844,13 @@ $("#cartItems").addEventListener("click", e => {
   const act = btn.dataset.cact;
   if (act === "plus")  setQty(pid, (state.cart[pid] || 0) + 1);
   if (act === "minus") setQty(pid, (state.cart[pid] || 0) - 1);
-  if (act === "del")   { delete state.cart[pid]; }
-  renderCart(); 
+  if (act === "del")   { delete state.cart[pid]; renderProducts(); }
+  renderCart();
 });
 
 /* ================= التحقق من الهاتف الجزائري ================= */
 function normalizePhone(v) {
-    v = String(v || "").replace(/[\u0660-\u0669]/g, d => d.charCodeAt(0) - 0x0660)
+  v = String(v || "").replace(/[\u0660-\u0669]/g, d => d.charCodeAt(0) - 0x0660)
     .replace(/[\u06F0-\u06F9]/g, d => d.charCodeAt(0) - 0x06F0)
     .replace(/[\s\-\.\(\)]/g, "");
   if (/^\+213[567]\d{8}$/.test(v)) return "0" + v.slice(4);
@@ -625,7 +869,7 @@ function validatePhone() {
     return false;
   }
   err.classList.remove("show"); $("#fPhone").classList.remove("err");
-  if (v !== ok) $("#fPhone").value = ok; // تحويل تلقائي للصيغة المحلية
+  if (v !== ok) $("#fPhone").value = ok;
   return true;
 }
 $("#fPhone").addEventListener("input", () => { validatePhone(); renderCart(); });
@@ -672,7 +916,6 @@ function openReviews(pid) {
     </div>`).join("")
     : `<div class="empty">لا توجد تقييمات بعد — كن أول من يقيّم 🌟</div>`;
   openOv("revOverlay");
-  // ربط زر الإغلاق الديناميكي
   $("#revTitle .x").onclick = () => closeOv("revOverlay");
 }
 
@@ -734,43 +977,23 @@ function tryLogin() {
   }
 }
 
-function readMedia(file) {
-  return new Promise((res, rej) => {
-    if (!file) return res({ media: null, mediaType: null });
-    if (file.size > 20 * 1024 * 1024) return rej("حجم الملف يتجاوز 20 ميغابايت");
-    // ضغط الصور تلقائياً لتوفير مساحة التخزين
-    if (file.type.startsWith("image/")) {
-      const img = new Image();
-      const url = URL.createObjectURL(file);
-      img.onload = () => {
-        const MAX = 800;
-        let w = img.width, h = img.height;
-        if (w > MAX || h > MAX) { const s = MAX / Math.max(w, h); w = Math.round(w*s); h = Math.round(h*s); }
-        const cv = document.createElement("canvas");
-        cv.width = w; cv.height = h;
-        cv.getContext("2d").drawImage(img, 0, 0, w, h);
-        URL.revokeObjectURL(url);
-        res({ media: cv.toDataURL("image/jpeg", 0.82), mediaType: "image" });
-      };
-      img.onerror = () => rej("تعذر قراءة الصورة");
-      img.src = url;
-      return;
-    }
-    const rd = new FileReader();
-    rd.onload = () => res({ media: rd.result, mediaType: file.type.startsWith("video") ? "video" : "image" });
-    rd.onerror = () => rej("تعذر قراءة الملف");
-    rd.readAsDataURL(file);
-  });
+// قراءة عدة ملفات صور بالتتابع
+async function readImages(files, room) {
+  const list = [...files];
+  if (list.length > room) toast("سيتم أخذ صورة واحدة فقط", "warn", 3000);
+  const out = [];
+  for (const f of list.slice(0, room)) out.push(await readImage(f));
+  return out;
 }
 
 $("#btnAddP").addEventListener("click", async () => {
   const name = $("#npName").value.trim(), ingredients = $("#npIng").value.trim();
   const price = parseInt($("#npPrice").value, 10);
   if (!name || !ingredients || !(price >= 0)) return toast("أكمل الاسم والمكونات والسعر", "warn");
-  const btn = $("#btnAddP"); btn.disabled = true; btn.textContent = "جارٍ الرفع...";
+  const btn = $("#btnAddP"); btn.disabled = true; btn.textContent = "جارٍ معالجة الصور...";
   try {
-    const { media, mediaType } = await readMedia($("#npMedia").files[0]);
-    saveProduct("p" + Date.now().toString(36), { name, ingredients, price, media, mediaType });
+    const images = await readImages($("#npMedia").files, MAX_IMGS);
+    saveProduct("p" + Date.now().toString(36), { name, ingredients, price, images, media: null, mediaType: null });
     $("#npName").value = ""; $("#npIng").value = ""; $("#npPrice").value = ""; $("#npMedia").value = "";
     toast("تمت إضافة المنتج ✅");
   } catch (e) { toast(String(e), "err"); }
@@ -779,21 +1002,25 @@ $("#btnAddP").addEventListener("click", async () => {
 
 function renderAdmin() {
   if (!state.adminOpen) return;
-  // المنتجات
-  $("#apProducts").innerHTML = state.products.map(p => `
+  $("#apProducts").innerHTML = state.products.map(p => {
+    const imgs = getImages(p);
+    return `
     <div class="ap-item" data-pid="${p.id}">
       <input class="e-name" value="${esc(p.name)}" placeholder="الاسم">
       <input class="e-ing" value="${esc(p.ingredients)}" placeholder="المكونات">
       <input class="e-price" type="number" min="0" value="${p.price}" placeholder="السعر (دج)">
+      ${imgs.length ? `<div class="thumbs">${imgs.map((s, i) => `
+        <div class="thumb"><img src="${esc(s)}" alt=""><button type="button" data-a="delimg" data-i="${i}" aria-label="حذف الصورة">✕</button></div>`).join("")}</div>` : ""}
       <div class="ap-row">
         <button class="btn-sm btn-save" data-a="save" type="button">💾 حفظ</button>
-        <label class="btn-sm btn-grey" style="cursor:pointer;">🖼️ تغيير الوسائط
-          <input type="file" accept="image/*,video/*" data-a="media" hidden>
+        <label class="btn-sm btn-grey" style="cursor:pointer;">🖼️ ${imgs.length ? "تغيير الصورة" : "إضافة صورة"}
+          <input type="file" accept="image/*" data-a="media" hidden>
         </label>
         <button class="btn-sm btn-del" data-a="del" type="button">🗑️ حذف</button>
       </div>
-    </div>`).join("") || `<div class="empty">لا منتجات</div>`;
-  // التقييمات
+    </div>`;
+  }).join("") || `<div class="empty">لا منتجات</div>`;
+
   let revs = [];
   Object.entries(state.reviews).forEach(([pid, rs]) => {
     const p = state.products.find(x => x.id === pid);
@@ -812,7 +1039,7 @@ function renderAdmin() {
 
 $("#apProducts").addEventListener("click", async e => {
   const btn = e.target.closest("[data-a]");
-  if (!btn) return;
+  if (!btn || btn.tagName === "INPUT") return;
   const item = e.target.closest("[data-pid]");
   const pid = item.dataset.pid;
   const p = state.products.find(x => x.id === pid);
@@ -823,8 +1050,17 @@ $("#apProducts").addEventListener("click", async e => {
     const ingredients = item.querySelector(".e-ing").value.trim();
     const price = parseInt(item.querySelector(".e-price").value, 10);
     if (!name || !ingredients || !(price >= 0)) return toast("أكمل الحقول بشكل صحيح", "warn");
-    saveProduct(pid, { ...p, name, ingredients, price });
+    const data = { ...p, name, ingredients, price };
+    delete data.id;
+    saveProduct(pid, data);
     toast("تم حفظ التعديلات ✅");
+  }
+  if (act === "delimg") {
+    const i = +btn.dataset.i;
+    const arr = getImages(p).filter((_, k) => k !== i);
+    state.galIdx[pid] = 0;
+    saveProduct(pid, withImages(p, arr));
+    toast("تم حذف الصورة");
   }
   if (act === "del") {
     if (!btn.classList.contains("armed")) {
@@ -840,14 +1076,18 @@ $("#apProducts").addEventListener("click", async e => {
 
 $("#apProducts").addEventListener("change", async e => {
   const inp = e.target.closest('input[data-a="media"]');
-  if (!inp || !inp.files[0]) return;
+  if (!inp || !inp.files.length) return;
   const item = inp.closest("[data-pid]");
   const pid = item.dataset.pid;
   const p = state.products.find(x => x.id === pid);
+  const files = [...inp.files];
+  inp.value = "";
+  toast("جارٍ معالجة الصورة...", "warn", 1500);
   try {
-    const { media, mediaType } = await readMedia(inp.files[0]);
-    saveProduct(pid, { ...p, media, mediaType });
-    toast("تم تحديث الصورة/الفيديو ✅");
+    const added = await readImages(files, MAX_IMGS);
+    state.galIdx[pid] = 0;
+    saveProduct(pid, withImages(p, added));
+    toast("تم تحديث الصورة ✅");
   } catch (err) { toast(String(err), "err"); }
 });
 
@@ -858,13 +1098,24 @@ $("#apReviews").addEventListener("click", e => {
   toast("تم حذف التقييم");
 });
 
-// توجيه أزرار واتساب الثابتة عبر نفس الآلية مع لوحة احتياطية
+// أزرار واتساب الثابتة
 document.querySelectorAll('a[href*="whatsapp.com/send"]').forEach(a => {
   a.addEventListener("click", e => {
     e.preventDefault();
     openWhatsApp(a.href);
   });
 });
+
+/* ================= روابط التواصل ================= */
+(function renderSocials() {
+  const fb = '<svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg>';
+  const tt = '<svg viewBox="0 0 24 24"><path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5 2.59 2.59 0 0 1-2.59-2.59 2.59 2.59 0 0 1 3.4-2.46V9.7a5.7 5.7 0 0 0-.81-.06 5.69 5.69 0 0 0-5.69 5.69A5.69 5.69 0 0 0 9.86 21a5.69 5.69 0 0 0 5.69-5.69V9.02a7.35 7.35 0 0 0 4.3 1.38V7.3a4.3 4.3 0 0 1-3.25-1.48z"/></svg>';
+  let h = "";
+  if (FACEBOOK_URL) h += `<a class="soc fb" href="${esc(FACEBOOK_URL)}" target="_blank" rel="noopener">${fb} فيسبوك</a>`;
+  if (TIKTOK_URL)   h += `<a class="soc tt" href="${esc(TIKTOK_URL)}" target="_blank" rel="noopener">${tt} تيك توك</a>`;
+  $("#socialsTop").innerHTML = h;
+  $("#socialsBottom").innerHTML = h;
+})();
 
 /* ================= الإقلاع ================= */
 initDB();
