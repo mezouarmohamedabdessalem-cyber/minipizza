@@ -250,6 +250,8 @@ footer .socials{margin:0 0 14px;}
 
 .empty{text-align:center; color:var(--muted); padding:34px 10px; font-size:15px;}
 footer{text-align:center; color:var(--muted); font-size:12.5px; padding:26px 0 6px;}
+.skel{height:300px;border-radius:18px;background:linear-gradient(90deg,var(--line) 25%,var(--card) 50%,var(--line) 75%);background-size:200% 100%;animation:sk 1.2s infinite;}
+@keyframes sk{to{background-position:-200% 0;}}
 </style>
 </head>
 <body>
@@ -434,7 +436,7 @@ function readImage(file) {
     const url = URL.createObjectURL(file);
     const img = new Image();
     img.onload = () => {
-      const MAX = 1100, LIMIT = 260000;   // حجم صغير يُسرّع الموقع
+      const MAX = 800, LIMIT = 90000;   // حجم صغير يُسرّع الموقع
       let w = img.naturalWidth, h = img.naturalHeight;
       if (w > MAX || h > MAX) { const s = MAX / Math.max(w, h); w = Math.round(w * s); h = Math.round(h * s); }
       const cv = document.createElement("canvas");
@@ -553,10 +555,18 @@ function initDB() {
       });
     }
 
+    try {
+      const cached = JSON.parse(localStorage.getItem("ps_cache_products") || "null");
+      if (cached && cached.length) { state.products = cached; state.dbReady = true; renderProducts(); }
+    } catch (e) {}
+
     db.ref("products").on("value", snap => {
       const v = snap.val() || {};
       state.products = Object.entries(v).map(([id, p]) => ({ id, ...p }));
       state.dbReady = true; state.dbFailed = false; clearTimeout(failTimer);
+      try {
+        localStorage.setItem("ps_cache_products", JSON.stringify(state.products.map(p => ({ ...p, images: null, media: null }))));
+      } catch (e) {}
       renderProducts(); renderAdmin();
     }, () => {
       state.dbFailed = true; renderProducts();
@@ -664,7 +674,7 @@ function renderProducts() {
       ? `<div class="empty">تعذر الوصول إلى المنتجات الآن.<br>تحقق من اتصال الإنترنت ثم حدّث الصفحة.</div>`
       : state.dbReady
         ? `<div class="empty">القائمة قيد التحديث حالياً 🍕<br>راسلنا على واتساب وسنخبرك بالمتوفر.</div>`
-        : `<div class="empty">جارٍ تحميل القائمة...</div>`;
+        : `<div class="skel"></div><div class="skel"></div><div class="skel"></div>`;
     return;
   }
   // إزالة أي منتج محذوف من السلة
