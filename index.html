@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>🍕 بيتزا صبرة — صبرة، تلمسان | توصيل 24 ساعة</title>
+<meta name="description" content="بيتزا صبرة — بيتزا طازجة على الطلب مع توصيل داخل صبرة (تلمسان) على مدار 24 ساعة. اطلب عبر واتساب: 0669957840.">
+<meta name="theme-color" content="#d7261e">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ar_DZ">
+<meta property="og:title" content="🍕 بيتزا صبرة — توصيل 24 ساعة في صبرة، تلمسان">
+<meta property="og:description" content="بيتزا طازجة على الطلب. اطلب الآن عبر واتساب ويصلك الطلب حتى باب بيتك.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍕%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Restaurant","name":"بيتزا صبرة","telephone":"+213669957840","servesCuisine":"Pizza","openingHours":"Mo-Su 00:00-23:59","address":{"@type":"PostalAddress","addressLocality":"صبرة","addressRegion":"تلمسان","addressCountry":"DZ"},"sameAs":["https://www.facebook.com/profile.php?id=61596554907138","https://www.tiktok.com/@minipizzasabra"]}
+</script>
 <style>
 :root{
   --red:#d7261e; --red-dark:#a71a14; --red-light:#ff5a4e;
@@ -22,11 +35,13 @@
 *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
 html{scroll-behavior:smooth;}
 body{
-  font-family:-apple-system,"Segoe UI",Tahoma,"Noto Kufi Arabic","Noto Sans Arabic",Arial,sans-serif;
-  background:var(--cream); color:var(--text); min-height:100vh; padding-bottom:calc(96px + env(safe-area-inset-bottom));
+  font-family:"Tajawal",-apple-system,"Segoe UI",Tahoma,"Noto Kufi Arabic","Noto Sans Arabic",Arial,sans-serif;
+  background:var(--cream); color:var(--text); min-height:100vh; min-height:100dvh; padding-bottom:calc(96px + env(safe-area-inset-bottom));
   line-height:1.7;
 }
 button{font-family:inherit; cursor:pointer; border:none;}
+:focus-visible{outline:3px solid var(--gold); outline-offset:2px;}
+@media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important; scroll-behavior:auto !important;}}
 input,textarea{font-family:inherit;}
 
 /* ===== الترويسة ===== */
@@ -328,8 +343,9 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; padding:26px 0 6
 <div class="overlay" id="pwdOverlay">
   <div class="sheet">
     <h3>🔐 منطقة المالك <button class="x" data-close="pwdOverlay" type="button">✕</button></h3>
-    <div class="field"><label>كلمة السر</label><input id="pwd" type="password" placeholder="••••••••">
-      <div class="err-msg" id="pwdErr">كلمة السر غير صحيحة.</div></div>
+    <div class="field"><label>البريد الإلكتروني</label><input id="pwdEmail" type="email" dir="ltr" style="text-align:right;" autocomplete="username" placeholder="name@example.com"></div>
+    <div class="field"><label>كلمة السر</label><input id="pwd" type="password" autocomplete="current-password" placeholder="••••••••">
+      <div class="err-msg" id="pwdErr">البريد أو كلمة السر غير صحيحة.</div></div>
     <button class="btn-send" id="btnPwd" type="button">دخول</button>
   </div>
 </div>
@@ -338,6 +354,7 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; padding:26px 0 6
 <div class="overlay" id="adminOverlay">
   <div class="sheet">
     <h3>⚙️ لوحة التحكم <button class="x" data-close="adminOverlay" type="button">✕</button></h3>
+    <div class="ap-row" style="margin-bottom:10px;"><button class="btn-sm btn-grey" id="btnLogout" type="button">🚪 تسجيل الخروج</button></div>
     <h4 style="margin:6px 0 8px;">➕ إضافة منتج جديد</h4>
     <div class="ap-item">
       <input id="npName" type="text" placeholder="اسم المنتج">
@@ -358,6 +375,7 @@ footer{text-align:center; color:var(--muted); font-size:12.5px; padding:26px 0 6
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
 <script>
 /* ============================================================
@@ -374,7 +392,6 @@ const FIREBASE_CONFIG = {
 };
 const WHATSAPP_INTL = "213669957840";
 const SHOP_NAME = "بيتزا صبرة";
-const ADMIN_PASSWORD = "محمد مزوار 2007";
 const MAX_IMGS = 1;   // صورة واحدة لكل منتج
 // 🔗 ضع روابط صفحاتك هنا (اتركها فارغة "" لإخفاء الزر)
 const FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61596554907138";
@@ -417,17 +434,21 @@ function readImage(file) {
     const url = URL.createObjectURL(file);
     const img = new Image();
     img.onload = () => {
-      const MAX = 1800;
+      const MAX = 1100, LIMIT = 260000;   // حجم صغير يُسرّع الموقع
       let w = img.naturalWidth, h = img.naturalHeight;
       if (w > MAX || h > MAX) { const s = MAX / Math.max(w, h); w = Math.round(w * s); h = Math.round(h * s); }
       const cv = document.createElement("canvas");
-      cv.width = w; cv.height = h;
       const ctx = cv.getContext("2d");
-      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
-      ctx.drawImage(img, 0, 0, w, h);
+      let scale = 1, q = 0.85, out = "";
+      const draw = () => {
+        cv.width = Math.round(w * scale); cv.height = Math.round(h * scale);
+        ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, cv.width, cv.height);
+        ctx.drawImage(img, 0, 0, cv.width, cv.height);
+        out = cv.toDataURL("image/jpeg", q);
+      };
+      draw();
+      while (out.length > LIMIT && (q > 0.55 || scale > 0.5)) { if (q > 0.55) q -= 0.1; else scale *= 0.85; draw(); }
       URL.revokeObjectURL(url);
-      let q = 0.92, out = cv.toDataURL("image/jpeg", q);
-      while (out.length > 700000 && q > 0.5) { q -= 0.08; out = cv.toDataURL("image/jpeg", q); }
       res(out);
     };
     img.onerror = () => { URL.revokeObjectURL(url); rej("تعذر قراءة الصورة"); };
@@ -450,20 +471,28 @@ function openWhatsApp(url) {
   } else {
     window.open(url, "_blank", "noopener");
   }
-  setTimeout(() => showWaFallback(url), 2500);
+  setTimeout(() => { if (document.visibilityState === "visible") showWaFallback(url); }, 2500);
 }
 let _waPanel = null;
 function showWaFallback(url) {
   if (_waPanel) _waPanel.remove();
+  const appUrl = url.replace("https://web.whatsapp.com/send?phone=", "https://wa.me/").replace("&text=", "?text=");
   const d = document.createElement("div");
   d.style.cssText = "position:fixed;inset-inline:0;bottom:110px;z-index:300;display:flex;justify-content:center;pointer-events:none;";
   d.innerHTML = `<div style="pointer-events:auto;background:#128c7e;color:#fff;padding:12px 16px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35);max-width:92vw;text-align:center;font-size:14px;line-height:1.9;">
     <div style="font-weight:900;">📲 إذا لم يُفتح واتساب تلقائياً:</div>
-    <a href="${url}" target="_blank" rel="noopener" style="color:#fff;font-weight:800;text-decoration:underline;word-break:break-all;">💻 واتساب ويب (كمبيوتر)</a>
-    <a href="${url.replace("https://web.whatsapp.com/send?phone=", "https://wa.me/").replace("&text=", "?text=")}" target="_blank" rel="noopener" style="color:#fff;font-weight:800;text-decoration:underline;word-break:break-all;display:block;">📱 واتساب تطبيق (هاتف)</a>
-    <div style="opacity:.85;font-size:12.5px;">أو انسخ الرابط: <button type="button" onclick="navigator.clipboard&&navigator.clipboard.writeText('${url}');this.textContent='✅ تم النسخ'" style="background:#fff;color:#128c7e;border:none;border-radius:999px;padding:3px 12px;font-weight:800;cursor:pointer;">نسخ الرابط</button></div>
-    <button type="button" onclick="this.parentElement.parentElement.remove()" style="margin-top:6px;background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:999px;padding:4px 16px;cursor:pointer;">إغلاق</button>
+    <a href="${esc(appUrl)}" target="_blank" rel="noopener" style="color:#fff;font-weight:800;text-decoration:underline;display:block;">📱 افتح واتساب (هاتف)</a>
+    <a href="${esc(url)}" target="_blank" rel="noopener" style="color:#fff;font-weight:800;text-decoration:underline;display:block;">💻 واتساب ويب (كمبيوتر)</a>
+    <button type="button" data-wa="copy" style="margin-top:6px;background:#fff;color:#128c7e;border:none;border-radius:999px;padding:4px 14px;font-weight:800;cursor:pointer;">نسخ الرابط</button>
+    <button type="button" data-wa="close" style="margin-top:6px;background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:999px;padding:4px 16px;cursor:pointer;">إغلاق</button>
   </div>`;
+  d.addEventListener("click", e => {
+    const b = e.target.closest("[data-wa]");
+    if (!b) return;
+    if (b.dataset.wa === "close") { d.remove(); return; }
+    try { navigator.clipboard.writeText(url); } catch (_) {}
+    b.textContent = "✅ تم النسخ";
+  });
   document.body.appendChild(d);
   _waPanel = d;
   setTimeout(() => { if (d.parentElement) d.remove(); }, 60000);
@@ -494,7 +523,13 @@ const DEFAULTS = [
   { id: "p2", name: "بيتزا دجاج", ingredients: "كفتة دجاج وجبن وصلصة", price: 600, media: null, mediaType: null },
 ];
 
+let auth = null;
 function initDB() {
+  if (typeof firebase === "undefined") {
+    state.dbFailed = true; renderProducts();
+    toast("تعذر تحميل القائمة، تحقق من الإنترنت ثم حدّث الصفحة", "err", 6000);
+    return;
+  }
   const failTimer = setTimeout(() => {
     if (!state.dbReady) {
       state.dbFailed = true;
@@ -504,15 +539,22 @@ function initDB() {
   }, 10000);
 
   try {
-    if (typeof firebase === "undefined" || !FIREBASE_CONFIG.databaseURL || FIREBASE_CONFIG.databaseURL.includes("PASTE")) {
+    if (!FIREBASE_CONFIG.databaseURL || FIREBASE_CONFIG.databaseURL.includes("PASTE")) {
       throw new Error("no-config");
     }
     firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.database();
 
+    if (firebase.auth) {
+      auth = firebase.auth();
+      auth.onAuthStateChanged(u => {
+        state.adminOpen = !!u;
+        if (u) renderAdmin(); else closeOv("adminOverlay");
+      });
+    }
+
     db.ref("products").on("value", snap => {
-      let v = snap.val();
-      if (!v) { v = Object.fromEntries(DEFAULTS.map(p => [p.id, p])); db.ref("products").set(v); }
+      const v = snap.val() || {};
       state.products = Object.entries(v).map(([id, p]) => ({ id, ...p }));
       state.dbReady = true; state.dbFailed = false; clearTimeout(failTimer);
       renderProducts(); renderAdmin();
@@ -531,7 +573,6 @@ function initDB() {
     state.dbFailed = false;
     clearTimeout(failTimer);
     renderProducts();
-    toast("يعمل الموقع بوضع محلي — بياناتك محفوظة في هذا المتصفح ✅", "ok", 5000);
   }
 }
 function lsLoad() {
@@ -551,17 +592,24 @@ function lsSave() {
     toast("مساحة التخزين ممتلئة — احذف بعض الصور القديمة", "err", 6000);
   }
 }
-function saveProduct(id, data) {
-  if (db) return db.ref("products/" + id).set(data).catch(() => toast("تعذر الحفظ — تحقق من الاتصال أو قلّل عدد الصور", "err", 5000));
+function saveProduct(id, data, okMsg) {
+  if (db) return db.ref("products/" + id).set(data)
+    .then(() => { if (okMsg) toast(okMsg); return true; })
+    .catch(() => { toast("تعذر الحفظ — تحقق من الاتصال أو سجّل الدخول من جديد", "err", 5000); return false; });
   const i = state.products.findIndex(x => x.id === id);
   if (i >= 0) state.products[i] = { id, ...data }; else state.products.push({ id, ...data });
   lsSave(); renderProducts(); renderAdmin();
+  if (okMsg) toast(okMsg);
+  return true;
 }
 function removeProduct(id) {
-  if (db) { db.ref("products/" + id).remove(); db.ref("reviews/" + id).remove(); return; }
+  if (db) return Promise.all([db.ref("products/" + id).remove(), db.ref("reviews/" + id).remove()])
+    .then(() => toast("تم حذف المنتج ✅"))
+    .catch(() => toast("تعذر الحذف — سجّل الدخول من جديد", "err", 5000));
   state.products = state.products.filter(x => x.id !== id);
   delete state.reviews[id];
   lsSave(); renderProducts(); renderAdmin();
+  toast("تم حذف المنتج ✅");
 }
 function saveReview(pid, r) {
   if (db) return db.ref("reviews/" + pid + "/" + r.id).set(r);
@@ -569,7 +617,7 @@ function saveReview(pid, r) {
   lsSave(); renderProducts(); renderAdmin();
 }
 function removeReview(pid, rid) {
-  if (db) return db.ref("reviews/" + pid + "/" + rid).remove();
+  if (db) return db.ref("reviews/" + pid + "/" + rid).remove().catch(() => toast("تعذر حذف التقييم", "err"));
   if (state.reviews[pid]) { delete state.reviews[pid][rid]; if (!Object.keys(state.reviews[pid]).length) delete state.reviews[pid]; }
   lsSave(); renderProducts(); renderAdmin();
 }
@@ -593,7 +641,7 @@ function mediaHTML(p) {
       imgs.map((s, i) => `<img src="${esc(s)}" alt="${esc(p.name)}" ${i ? 'loading="lazy"' : ""} data-act="zoom" data-i="${i}" draggable="false">`).join("") +
       `</div>`;
     if (imgs.length === 1) {
-      return `<img class="single" src="${esc(imgs[0])}" alt="${esc(p.name)}" data-act="zoom" data-i="0" draggable="false"><span class="g-zoomhint">🔍 اضغط للتكبير</span>`;
+      return `<img class="single" src="${esc(imgs[0])}" alt="${esc(p.name)}" loading="lazy" decoding="async" data-act="zoom" data-i="0" draggable="false"><span class="g-zoomhint">🔍 اضغط للتكبير</span>`;
     }
     if (imgs.length > 1) {
       h += `<button class="g-arrow g-prev" data-act="gprev" type="button" aria-label="السابقة">‹</button>
@@ -614,9 +662,13 @@ function renderProducts() {
   if (!state.products.length) {
     grid.innerHTML = state.dbFailed
       ? `<div class="empty">تعذر الوصول إلى المنتجات الآن.<br>تحقق من اتصال الإنترنت ثم حدّث الصفحة.</div>`
-      : `<div class="empty">جارٍ تحميل القائمة...</div>`;
+      : state.dbReady
+        ? `<div class="empty">القائمة قيد التحديث حالياً 🍕<br>راسلنا على واتساب وسنخبرك بالمتوفر.</div>`
+        : `<div class="empty">جارٍ تحميل القائمة...</div>`;
     return;
   }
+  // إزالة أي منتج محذوف من السلة
+  Object.keys(state.cart).forEach(id => { if (!state.products.some(p => p.id === id)) delete state.cart[id]; });
   grid.innerHTML = state.products.map(p => {
     const { avg, count } = avgStars(p.id);
     const qty = state.cart[p.id] || 0;
@@ -685,9 +737,19 @@ $("#products").addEventListener("scroll", e => {
   if (c) c.textContent = (idx + 1) + "/" + g.children.length;
 }, true);
 
+function cartSave() { try { localStorage.setItem("ps_cart", JSON.stringify(state.cart)); } catch (e) {} }
+function cartLoad() {
+  try {
+    const c = JSON.parse(localStorage.getItem("ps_cart") || "{}");
+    Object.entries(c).forEach(([k, v]) => { if (Number.isInteger(v) && v > 0 && v <= 99) state.cart[k] = v; });
+  } catch (e) {}
+}
 function setQty(pid, q) {
   if (q <= 0) delete state.cart[pid]; else state.cart[pid] = Math.min(q, 99);
-  renderProducts();
+  cartSave();
+  const n = document.querySelector('.card[data-pid="' + CSS.escape(pid) + '"] .qty .n');
+  if (n) n.textContent = state.cart[pid] || 0;
+  updateCartBar();
 }
 
 /* ================= العرض الكامل للصور ================= */
@@ -844,7 +906,7 @@ $("#cartItems").addEventListener("click", e => {
   const act = btn.dataset.cact;
   if (act === "plus")  setQty(pid, (state.cart[pid] || 0) + 1);
   if (act === "minus") setQty(pid, (state.cart[pid] || 0) - 1);
-  if (act === "del")   { delete state.cart[pid]; renderProducts(); }
+  if (act === "del")   setQty(pid, 0);
   renderCart();
 });
 
@@ -895,6 +957,7 @@ $("#btnSend").addEventListener("click", () => {
   if (note) msg += `📝 ملاحظة: ${note}\n`;
   msg += `⏰ الطلب عند الطلب — التوصيل داخل صبرة (تلمسان)`;
 
+  try { localStorage.setItem("ps_cust", JSON.stringify({ name, phone, addr })); } catch (e) {}
   const urls = waUrls(WHATSAPP_INTL, msg);
   try { navigator.clipboard.writeText(msg); } catch (e) {}
   openWhatsApp(urls.web);
@@ -932,6 +995,9 @@ $("#starInput").addEventListener("click", e => {
 });
 
 function openRate(pid) {
+  try {
+    if (!state.adminOpen && localStorage.getItem("ps_rated_" + pid)) return toast("سبق أن قيّمت هذا المنتج، شكراً لك 🌟", "warn");
+  } catch (e) {}
   state.ratingPid = pid;
   state.ratingStars = 0;
   const p = state.products.find(x => x.id === pid);
@@ -951,9 +1017,11 @@ $("#btnRate").addEventListener("click", () => {
     text: $("#rText").value.trim().slice(0, 400),
     date: Date.now()
   };
-  saveReview(state.ratingPid, r);
+  const pid = state.ratingPid;
   closeOv("rateOverlay");
-  toast("شكراً! تم نشر تقييمك 🌟");
+  Promise.resolve(saveReview(pid, r))
+    .then(() => { try { localStorage.setItem("ps_rated_" + pid, "1"); } catch (e) {} toast("شكراً! تم نشر تقييمك 🌟"); })
+    .catch(() => toast("تعذر نشر التقييم، حاول لاحقاً", "err"));
 });
 
 /* ================= لوحة التحكم ================= */
@@ -963,19 +1031,30 @@ $("#adminLink").addEventListener("click", () => {
 });
 $("#btnPwd").addEventListener("click", tryLogin);
 $("#pwd").addEventListener("keydown", e => { if (e.key === "Enter") tryLogin(); });
-function tryLogin() {
-  const norm = s => s.replace(/\s+/g, " ").trim();
-  if (norm($("#pwd").value) === norm(ADMIN_PASSWORD)) {
+async function tryLogin() {
+  if (!auth) return toast("خدمة الدخول غير متاحة الآن — حدّث الصفحة", "err");
+  const email = $("#pwdEmail").value.trim(), pw = $("#pwd").value;
+  if (!email || !pw) { $("#pwdErr").classList.add("show"); return; }
+  const btn = $("#btnPwd"); btn.disabled = true;
+  try {
+    await auth.signInWithEmailAndPassword(email, pw);
     state.adminOpen = true;
     closeOv("pwdOverlay");
     renderAdmin();
     openOv("adminOverlay");
     toast("مرحباً بك أيها المالك 👋", "ok");
-  } else {
+  } catch (e) {
     $("#pwdErr").classList.add("show");
-    toast("كلمة السر غير صحيحة", "err");
+    toast("البريد أو كلمة السر غير صحيحة", "err");
   }
+  btn.disabled = false;
 }
+$("#btnLogout").addEventListener("click", () => {
+  if (auth) auth.signOut();
+  state.adminOpen = false;
+  closeOv("adminOverlay");
+  toast("تم تسجيل الخروج");
+});
 
 // قراءة عدة ملفات صور بالتتابع
 async function readImages(files, room) {
@@ -993,9 +1072,8 @@ $("#btnAddP").addEventListener("click", async () => {
   const btn = $("#btnAddP"); btn.disabled = true; btn.textContent = "جارٍ معالجة الصور...";
   try {
     const images = await readImages($("#npMedia").files, MAX_IMGS);
-    saveProduct("p" + Date.now().toString(36), { name, ingredients, price, images, media: null, mediaType: null });
-    $("#npName").value = ""; $("#npIng").value = ""; $("#npPrice").value = ""; $("#npMedia").value = "";
-    toast("تمت إضافة المنتج ✅");
+    const ok = await saveProduct("p" + Date.now().toString(36), { name, ingredients, price, images, media: null, mediaType: null }, "تمت إضافة المنتج ✅");
+    if (ok) { $("#npName").value = ""; $("#npIng").value = ""; $("#npPrice").value = ""; $("#npMedia").value = ""; }
   } catch (e) { toast(String(e), "err"); }
   btn.disabled = false; btn.textContent = "إضافة المنتج";
 });
@@ -1052,15 +1130,13 @@ $("#apProducts").addEventListener("click", async e => {
     if (!name || !ingredients || !(price >= 0)) return toast("أكمل الحقول بشكل صحيح", "warn");
     const data = { ...p, name, ingredients, price };
     delete data.id;
-    saveProduct(pid, data);
-    toast("تم حفظ التعديلات ✅");
+    saveProduct(pid, data, "تم حفظ التعديلات ✅");
   }
   if (act === "delimg") {
     const i = +btn.dataset.i;
     const arr = getImages(p).filter((_, k) => k !== i);
     state.galIdx[pid] = 0;
-    saveProduct(pid, withImages(p, arr));
-    toast("تم حذف الصورة");
+    saveProduct(pid, withImages(p, arr), "تم حذف الصورة");
   }
   if (act === "del") {
     if (!btn.classList.contains("armed")) {
@@ -1070,7 +1146,6 @@ $("#apProducts").addEventListener("click", async e => {
       return;
     }
     removeProduct(pid);
-    toast("تم حذف المنتج", "ok");
   }
 });
 
@@ -1086,8 +1161,7 @@ $("#apProducts").addEventListener("change", async e => {
   try {
     const added = await readImages(files, MAX_IMGS);
     state.galIdx[pid] = 0;
-    saveProduct(pid, withImages(p, added));
-    toast("تم تحديث الصورة ✅");
+    await saveProduct(pid, withImages(p, added), "تم تحديث الصورة ✅");
   } catch (err) { toast(String(err), "err"); }
 });
 
@@ -1095,7 +1169,6 @@ $("#apReviews").addEventListener("click", e => {
   const btn = e.target.closest('[data-a="delrev"]');
   if (!btn) return;
   removeReview(btn.dataset.pid, btn.dataset.rid);
-  toast("تم حذف التقييم");
 });
 
 // أزرار واتساب الثابتة
@@ -1118,6 +1191,12 @@ document.querySelectorAll('a[href*="whatsapp.com/send"]').forEach(a => {
 })();
 
 /* ================= الإقلاع ================= */
+cartLoad();
+try {
+  const c = JSON.parse(localStorage.getItem("ps_cust") || "null");
+  if (c) { $("#fName").value = c.name || ""; $("#fPhone").value = c.phone || ""; $("#fAddr").value = c.addr || ""; }
+} catch (e) {}
+updateCartBar();
 initDB();
 </script>
 </body>
